@@ -17,7 +17,6 @@ class ParisApiController extends Controller
      */
     public function index()
     {
-        // replace this line with your own code!
         $client = new Client();
         $res = $client->request('GET', self::api, [
             'query' => [
@@ -43,6 +42,16 @@ class ParisApiController extends Controller
             $event->setEnd(new \DateTime($d->evenements->realDateEnd));
             $events[] = $event;
         }
+
+        usort($events, function($a, $b){
+            if($a->getStart() > $b->getStart()){
+                return 1;
+            }
+            if($a->getStart() < $b->getStart()){
+                return -1;
+            }
+            return 0;
+        });
 
         return $this->render('paris.html.twig',
             [
