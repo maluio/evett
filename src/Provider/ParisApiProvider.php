@@ -1,22 +1,17 @@
 <?php
 
-namespace App\Controller;
 
-use App\Entity\Event;
+namespace App\Provider;
+
 use GuzzleHttp\Client;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use App\Entity\Event;
 
-class ParisApiController extends Controller
+
+class ParisApiProvider
 {
-
     CONST api = 'https://api.paris.fr/api/data/2.2/QueFaire/get_events/';
 
-    /**
-     * @Route("/paris", name="paris_api")
-     */
-    public function index()
-    {
+    public function get(){
         $client = new Client();
         $res = $client->request('GET', self::api, [
             'query' => [
@@ -43,20 +38,7 @@ class ParisApiController extends Controller
             $events[] = $event;
         }
 
-        usort($events, function($a, $b){
-            if($a->getStart() > $b->getStart()){
-                return 1;
-            }
-            if($a->getStart() < $b->getStart()){
-                return -1;
-            }
-            return 0;
-        });
-
-        return $this->render('paris.html.twig',
-            [
-                'response' => $response,
-                'events' => $events
-            ]);
+        return $events;
     }
+
 }
