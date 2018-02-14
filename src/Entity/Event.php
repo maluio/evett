@@ -24,6 +24,8 @@ class Event
 
     private $end;
 
+    private $url;
+
     /**
      * @return mixed
      */
@@ -88,4 +90,19 @@ class Event
         $this->end = $end;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
 }
