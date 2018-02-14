@@ -50,7 +50,6 @@ class MeetupProvider
                 return $i == 0;
             });
             $time = preg_replace("/[^ \w]+/", "", $time->text());
-            dump($time);
             $time = str_split($time);
             $start = new \DateTime();
             if(count($time)===4){
@@ -76,10 +75,12 @@ class MeetupProvider
                 ->filter('.row-item a')->reduce(function ($el, $i) {
                     return $i == 2;
                 });
+            $url = $title->attr('href');
             $title = preg_replace("/[^ \w]+/", "", $title->text());
 
             $event = new Event();
             $event->setTitle($title);
+            $event->setUrl($url);
             $event->setDescription($group);
             $event->setStart($start);
             $event->setProvider('MEETUP');

@@ -63,6 +63,7 @@ class OvsProvider
                 });
             $event = new Event();
             $event->setTitle($title->text());
+            $event->setUrl('http://paris.onvasortir.com/' . $title->filter('a')->attr('href'));
             $event->setProvider('OVS');
             $event->setStart($start);
             $this->events[] = $event;
