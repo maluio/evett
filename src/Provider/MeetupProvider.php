@@ -5,17 +5,45 @@ namespace App\Provider;
 
 
 use App\Entity\Event;
+use App\Repository\EventRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class MeetupProvider
 {
 
     CONST api = 'https://www.meetup.com/fr-FR/find/events/';
 
+    /**
+     * @var array
+     */
     private $events = [];
 
+    /**
+     * @var DateTime
+     */
     private $day;
+
+    /**
+     * @var EventRepository
+     */
+    private $eventRepository;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    /**
+     * @param EventRepository $eventRepository
+     */
+    public function __construct(EventRepository $eventRepository, EntityManagerInterface $entityManager)
+    {
+        $this->eventRepository = $eventRepository;
+        $this->em = $entityManager;
+    }
 
     public function get($day)
     {
@@ -77,6 +105,11 @@ class MeetupProvider
                     return $i == 2;
                 });
             $url = $title->attr('href');
+
+            if($this->eventRepository->urlExists($url)){
+                return;
+            }
+
             $title = preg_replace('/[^\p{Latin}\d ]/u', '', $title->text());
 
             $event = new Event();
@@ -94,6 +127,11 @@ class MeetupProvider
                 }*/
         //dump($html);
 
+        foreach ($this->events as $event){
+            $this->em->persist($event);
+        }
+
+        $this->em->flush();
 
         return $this->events;
     }

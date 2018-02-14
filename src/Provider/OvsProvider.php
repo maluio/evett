@@ -5,6 +5,8 @@ namespace App\Provider;
 
 
 use App\Entity\Event;
+use App\Repository\EventRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -15,6 +17,16 @@ class OvsProvider
     private $events = [];
 
     private $day;
+
+    private $em;
+
+    private $eventRepository;
+
+    public function __construct(EntityManagerInterface $em, EventRepository $eventRepository)
+    {
+        $this->em = $em;
+        $this->eventRepository = $eventRepository;
+    }
 
     public function get($day)
     {
@@ -61,13 +73,26 @@ class OvsProvider
                 ->reduce(function ($td, $i) {
                     return $i == 2;
                 });
+
+            $url = 'http://paris.onvasortir.com/' . $title->filter('a')->attr('href');
+
+            if($this->eventRepository->urlExists($url)){
+                return;
+            }
+
             $event = new Event();
             $event->setTitle($title->text());
-            $event->setUrl('http://paris.onvasortir.com/' . $title->filter('a')->attr('href'));
+            $event->setUrl($url);
             $event->setProvider('OVS');
             $event->setStart($start);
             $this->events[] = $event;
         });
+
+        foreach ($this->events as $event){
+            $this->em->persist($event);
+        }
+
+        $this->em->flush();
 
         return $this->events;
     }
