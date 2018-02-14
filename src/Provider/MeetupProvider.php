@@ -79,8 +79,10 @@ class MeetupProvider
             $title = preg_replace("/[^ \w]+/", "", $title->text());
 
             $event = new Event();
-            $event->setTitle('MEETUP ' . $title . '(' . $group .')');
+            $event->setTitle($title);
+            $event->setDescription($group);
             $event->setStart($start);
+            $event->setProvider('MEETUP');
             $this->events[] = $event;
         });
 

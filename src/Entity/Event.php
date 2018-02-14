@@ -26,6 +26,8 @@ class Event
 
     private $url;
 
+    private $provider;
+
     /**
      * @return mixed
      */
@@ -104,5 +106,21 @@ class Event
     public function setUrl($url)
     {
         $this->url = $url;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getProvider()
+    {
+        return $this->provider;
+    }
+
+    /**
+     * @param mixed $provider
+     */
+    public function setProvider($provider)
+    {
+        $this->provider = $provider;
     }
 }

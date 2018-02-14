@@ -1,11 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-{{ dump(events) }}
-    {% for event in events %}
-    <ul>
-        <li>{{ event.title }}</li>
-        <li>{{ event.start|date("r") }}</li>
-    </ul>
-    {% endfor %}
+    <table class="table">
+        {% for event in events %}
+            <tbody>
+            <tr>
+                <td>{{ event.start|date("r") }}</td>
+                <td>{{ event.provider }}</td>
+                <td><b>{{ event.title }}</b></td>
+                <td>{{ event.description }}</td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
 {% endblock %}
