@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Provider\MeetupProvider;
 use App\Provider\OvsProvider;
 use App\Provider\ParisApiProvider;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,11 +14,12 @@ class EventController extends Controller
     /**
      * @Route("/", name="home")
      */
-    public function index(ParisApiProvider $paris, OvsProvider $ovs)
+    public function index(ParisApiProvider $paris, OvsProvider $ovs, MeetupProvider $meetup)
     {
         $events = [];
-        $events = array_merge($paris->get(), $events);
+        //$events = array_merge($paris->get(), $events);
         $events = array_merge($ovs->get(), $events);
+        $events = array_merge($meetup->get(), $events);
         usort($events, function($a, $b){
             if($a->getStart() > $b->getStart()){
                 return 1;

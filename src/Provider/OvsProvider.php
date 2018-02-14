@@ -62,7 +62,7 @@ class OvsProvider
                     return $i == 2;
                 });
             $event = new Event();
-            $event->setTitle($title->text());
+            $event->setTitle('OVS ' . $title->text());
             $event->setStart($start);
             $this->events[] = $event;
         });
