@@ -1,6 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <a href="{{ path('home', {
+        'year' : "now"|date("Y"),
+        'month' : "now"|date("m"),
+        'day' : "now"|date("d")
+    }) }}">{{ "now"|date("d.m") }}</a>
+
+    <a href="{{ path('home', {
+        'year' : "now"|date("Y"),
+        'month' : "now"|date("m"),
+        'day' : "now + 1day"|date("d")
+    }) }}">{{ "now + 1day"|date("d.m") }}</a>
+
+
     <table class="table">
         {% for event in events %}
             <tbody>

@@ -15,10 +15,11 @@ class MeetupProvider
 
     private $events = [];
 
-    public function get()
-    {
+    private $day;
 
-        $now = new \DateTime();
+    public function get($day)
+    {
+        $this->day = $day;
 
         $client = new Client();
         $response = $client->request('GET', self::api, [
@@ -28,9 +29,9 @@ class MeetupProvider
                 'userFreeform' => 'Paris',
                 'mcId' => 'c1011740',
                 'mcName' => 'Paris%2C+FR',
-                'year' => $now->format('Y'),
-                'month' => $now->format('m'),
-                'day' => $now->format('d'),
+                'year' => $this->day->format('Y'),
+                'month' => $this->day->format('m'),
+                'day' => $this->day->format('d'),
             ]
         ]);
 
@@ -39,9 +40,9 @@ class MeetupProvider
         $crawler = new Crawler();
         $crawler->addHtmlContent($html);
         // $crawler = $crawler->filter('ul.searchResults');
-        $year = $now->format('Y');
-        $month = $now->format('n');
-        $day = $now->format('j');
+        $year = $this->day->format('Y');
+        $month = $this->day->format('n');
+        $day = $this->day->format('j');
         $class = '.container-' . $year . '-' . $month . '-' . $day;
 
         $crawler = $crawler->filter('ul.searchResults ' . $class . ' li')->each(function (Crawler $el, $i) {
@@ -51,7 +52,7 @@ class MeetupProvider
             });
             $time = preg_replace("/[^ \w]+/", "", $time->text());
             $time = str_split($time);
-            $start = new \DateTime();
+            $start = clone $this->day;
             if(count($time)===4){
                 $start->setTime(
                     (int) $time[0].$time[1],

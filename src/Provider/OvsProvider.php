@@ -14,18 +14,18 @@ class OvsProvider
 
     private $events = [];
 
-    private $now;
+    private $day;
 
-    public function get()
+    public function get($day)
     {
-        $this->now = new \DateTime();
+        $this->day = $day;
 
         $client = new Client();
         $response = $client->request('GET', self::api, [
             'query' => [
-                'y' => $this->now->format('Y'),
-                'm' => $this->now->format('m'),
-                'd' => $this->now->format('d')
+                'y' => $this->day->format('Y'),
+                'm' => $this->day->format('m'),
+                'd' => $this->day->format('d')
             ]
         ]);
 
@@ -51,7 +51,7 @@ class OvsProvider
                     return $i == 1;
                 });
             $time = str_split($time->text());
-            $start = new \DateTime();
+            $start = clone $this->day;
             $start->setTime(
                 (int) $time[0].$time[1],
                 (int) $time[3].$time[4]
