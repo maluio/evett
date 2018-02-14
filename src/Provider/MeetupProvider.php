@@ -70,14 +70,14 @@ class MeetupProvider
                 ->filter('.row-item a')->reduce(function ($el, $i) {
                     return $i == 1;
                 });
-            $group = preg_replace("/[^ \w]+/", "", $group->text());
+            $group = preg_replace('/[^\p{Latin}\d ]/u', '', $group->text());
 
             $title = $el
                 ->filter('.row-item a')->reduce(function ($el, $i) {
                     return $i == 2;
                 });
             $url = $title->attr('href');
-            $title = preg_replace("/[^ \w]+/", "", $title->text());
+            $title = preg_replace('/[^\p{Latin}\d ]/u', '', $title->text());
 
             $event = new Event();
             $event->setTitle($title);
