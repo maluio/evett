@@ -56,16 +56,30 @@ class Event
     private $provider;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      * @var boolean
      */
     private $starred;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
+     * @ORM\Column(type="boolean")
      * @var boolean
      */
     private $hidden;
+
+    public function __construct()
+    {
+        $this->setHidden(false);
+        $this->setStarred(false);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * @return string

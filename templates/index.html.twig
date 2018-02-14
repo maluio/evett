@@ -18,6 +18,7 @@
         {% for event in events %}
             <tbody>
             <tr>
+                <td><a href="{{ path('hide', {'id':event.id}) }}">Hide</a> </td>
                 <td>{{ event.start|date("H:i") }}</td>
                 <td>{{ event.provider }}</td>
                 <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
