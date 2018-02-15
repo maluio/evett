@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -128,7 +127,7 @@ class Event
     }
 
     /**
-     * @param DateTime $start
+     * @param \DateTime $start
      */
     public function setStart($start)
     {
@@ -144,7 +143,7 @@ class Event
     }
 
     /**
-     * @param DateTime $end
+     * @param \DateTime $end
      */
     public function setEnd($end)
     {
