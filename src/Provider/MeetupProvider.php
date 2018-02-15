@@ -3,12 +3,11 @@
 
 namespace App\Provider;
 
-
 use App\Entity\Event;
 use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
-class MeetupProvider
+class MeetupProvider extends AbstractProvider
 {
 
     CONST api = 'https://www.meetup.com/fr-FR/find/events/';
@@ -80,7 +79,7 @@ class MeetupProvider
                 ->filter('.row-item a')->reduce(function ($el, $i) {
                     return $i == 1;
                 });
-            $group = preg_replace('/[^\p{Latin}\d ]/u', '', $group->text());
+            $group = $this->sanitizer->removeUndesiredCharacters($group->text());
 
             $title = $el
                 ->filter('.row-item a')->reduce(function ($el, $i) {
@@ -88,7 +87,7 @@ class MeetupProvider
                 });
             $url = $title->attr('href');
 
-            $title = preg_replace('/[^\p{Latin}\d ]/u', '', $title->text());
+            $title = $this->sanitizer->removeUndesiredCharacters($title->text());
 
             $event = new Event();
             $event->setTitle($title);

@@ -8,7 +8,7 @@ use App\Entity\Event;
 use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
-class OvsProvider
+class OvsProvider extends AbstractProvider
 {
     CONST api = 'http://paris.onvasortir.com/vue_sortie_day.php';
 
@@ -60,7 +60,8 @@ class OvsProvider
             $url = 'http://paris.onvasortir.com/' . $title->filter('a')->attr('href');
 
             $event = new Event();
-            $event->setTitle($title->text());
+            $title = $this->sanitizer->removeUndesiredCharacters($title->text());
+            $event->setTitle($title);
             $event->setUrl($url);
             $event->setProvider('OVS');
             $event->setStart($start);
