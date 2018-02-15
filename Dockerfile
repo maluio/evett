@@ -58,7 +58,7 @@ COPY config config/
 COPY bin bin/
 COPY src src/
 COPY public public/
-COPY .env .env
+COPY .env.dist .env.dist
 COPY translations translations/
 COPY templates templates/
 
