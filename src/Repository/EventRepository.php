@@ -13,10 +13,8 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-    public function urlExists ($url){
-        $existingRecords = $this->findBy(['url' => $url]);
-        dump( count($existingRecords));
-        return count($existingRecords) ? true : false;
+    public function findOneByUrl($url){
+        return $existingRecords = $this->findOneBy(['url' => $url]);
     }
 
     public function getForDay(\DateTime $day)

@@ -68,7 +68,7 @@ class Event
     private $hidden;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime")
      * @var \DateTime
      */
     private $updated;
@@ -120,7 +120,7 @@ class Event
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getStart()
     {
@@ -136,7 +136,7 @@ class Event
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getEnd()
     {

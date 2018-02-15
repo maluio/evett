@@ -19,8 +19,8 @@ class EventController extends Controller
     {
         $day = $this->getDay($request);
         $events = $eventRepository->getForDay($day);
+        $oneHourAgo = new \DateTime('now - 1hour');
 
-/*        $oneHourAgo = new \DateTime('now - 1hour');
         if(
             !count($events)
             || $events[0]->getUpdated() < $oneHourAgo
@@ -28,22 +28,12 @@ class EventController extends Controller
         {
             $importer->import($day);
             $events = $eventRepository->getForDay($day);
-        }*/
+        }
 
         return $this->render('index.html.twig',
             [
                 'events' => $events
             ]);
-    }
-
-    /**
-     * @Route("/import/", name="import")
-     */
-    public function import(Request $request, Importer $importer){
-
-        $importer->import($this->getDay($request));
-
-        return $this->redirectToRoute('home');
     }
 
     /**
