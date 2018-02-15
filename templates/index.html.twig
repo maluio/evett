@@ -1,31 +1,22 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <a href="{{ path('home', {
-        'year' : "now"|date("Y"),
-        'month' : "now"|date("m"),
-        'day' : "now"|date("d")
-    }) }}">{{ "now"|date("d.m") }}</a>
 
-    <a href="{{ path('home', {
-        'year' : "now"|date("Y"),
-        'month' : "now"|date("m"),
-        'day' : "now + 1day"|date("d")
-    }) }}">{{ "now + 1day"|date("d.m") }}</a>
-
-
-    <table class="table">
-        {% for event in events %}
-            <tbody>
-            <tr>
-                <td><a href="{{ path('hide', {'id':event.id}) }}">Hide</a> </td>
-                <td>{{ event.start|date("H:i") }}</td>
-                <td>{{ event.provider }}</td>
-                <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
-                <td>{{ event.description }}</td>
-                <td>{{ event.updated|date("r") }}</td>
-            </tr>
-            </tbody>
-        {% endfor %}
-    </table>
+    {{ include('navigation.html.twig') }}
+    <div style="margin-top: 50px">
+        <table class="table">
+            {% for event in events %}
+                <tbody>
+                <tr>
+                    <td><a href="{{ path('hide', {'id':event.id}) }}">Hide</a> </td>
+                    <td>{{ event.start|date("H:i") }}</td>
+                    <td>{{ event.provider }}</td>
+                    <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
+                    <td>{{ event.description }}</td>
+                    <td>{{ event.updated|date("r") }}</td>
+                </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

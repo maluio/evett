@@ -32,7 +32,8 @@ class EventController extends Controller
 
         return $this->render('index.html.twig',
             [
-                'events' => $events
+                'events' => $events,
+                'day' => $day
             ]);
     }
 

@@ -1,0 +1,19 @@
+<ul class="nav" style="position:fixed; top: 0; background-color: lightgray; width: 100%">
+    <li class="nav-item">
+        <a class="nav-link active" href="{{ path('home', {
+            'year' : day|date("Y"),
+            'month' : day|date("m"),
+            'day' : day|date_modify("-1 day")|date("d")
+        }) }}"> <- </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link disabled" href="#">{{ day|date("D (d.m)") }}</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ path('home', {
+            'year' : day|date("Y"),
+            'month' : day|date("m"),
+            'day' : day|date_modify("+1 day")|date("d")
+        }) }}"> -> </a>
+    </li>
+</ul>
