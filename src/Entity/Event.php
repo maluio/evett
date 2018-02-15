@@ -33,13 +33,13 @@ class Event
 
     /**
      * @ORM\Column(type="datetime")
-     * @var DateTime
+     * @var \DateTime
      */
     private $start;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
-     * @var DateTime
+     * @var \DateTime
      */
     private $end;
 
@@ -66,6 +66,12 @@ class Event
      * @var boolean
      */
     private $hidden;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     * @var \DateTime
+     */
+    private $updated;
 
     public function __construct()
     {
@@ -207,5 +213,21 @@ class Event
     public function setHidden($hidden)
     {
         $this->hidden = $hidden;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdated()
+    {
+        return $this->updated;
+    }
+
+    /**
+     * @param \DateTime $updated
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
     }
 }

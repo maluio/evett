@@ -5,11 +5,8 @@ namespace App\Provider;
 
 
 use App\Entity\Event;
-use App\Repository\EventRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Validator\Constraints\DateTime;
 
 class MeetupProvider
 {
@@ -22,29 +19,14 @@ class MeetupProvider
     private $events = [];
 
     /**
-     * @var DateTime
+     * @var \DateTime
      */
     private $day;
 
     /**
-     * @var EventRepository
+     * @param $day
+     * @return array[Events]
      */
-    private $eventRepository;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @param EventRepository $eventRepository
-     */
-    public function __construct(EventRepository $eventRepository, EntityManagerInterface $entityManager)
-    {
-        $this->eventRepository = $eventRepository;
-        $this->em = $entityManager;
-    }
-
     public function get($day)
     {
         $this->day = $day;
@@ -106,10 +88,6 @@ class MeetupProvider
                 });
             $url = $title->attr('href');
 
-            if($this->eventRepository->urlExists($url)){
-                return;
-            }
-
             $title = preg_replace('/[^\p{Latin}\d ]/u', '', $title->text());
 
             $event = new Event();
@@ -120,18 +98,6 @@ class MeetupProvider
             $event->setProvider('MEETUP');
             $this->events[] = $event;
         });
-
-        /*        foreach ($crawler as $domElement) {
-                    $html = $domElement->ownerDocument->saveHTML($domElement);
-                   dump($html);
-                }*/
-        //dump($html);
-
-        foreach ($this->events as $event){
-            $this->em->persist($event);
-        }
-
-        $this->em->flush();
 
         return $this->events;
     }

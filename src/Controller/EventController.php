@@ -3,11 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Event;
-use App\Provider\MeetupProvider;
-use App\Provider\OvsProvider;
-use App\Provider\ParisApiProvider;
+use App\Import\Importer;
 use App\Repository\EventRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +15,20 @@ class EventController extends Controller
     /**
      * @Route("/", name="home")
      */
-    public function index(Request $request, EventRepository $eventRepository)
+    public function index(Request $request, EventRepository $eventRepository, Importer $importer)
     {
         $day = $this->getDay($request);
         $events = $eventRepository->getForDay($day);
+
+/*        $oneHourAgo = new \DateTime('now - 1hour');
+        if(
+            !count($events)
+            || $events[0]->getUpdated() < $oneHourAgo
+        )
+        {
+            $importer->import($day);
+            $events = $eventRepository->getForDay($day);
+        }*/
 
         return $this->render('index.html.twig',
             [
@@ -32,9 +39,9 @@ class EventController extends Controller
     /**
      * @Route("/import/", name="import")
      */
-    public function import(Request $request, ParisApiProvider $paris, OvsProvider $ovs, MeetupProvider $meetup){
-        $ovs->get($this->getDay($request));
-        $meetup->get($this->getDay($request));
+    public function import(Request $request, Importer $importer){
+
+        $importer->import($this->getDay($request));
 
         return $this->redirectToRoute('home');
     }
