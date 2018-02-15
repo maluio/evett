@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    environment:
+      # Change to prod in production
+      - SYMFONY_ENV=dev
+      - DATABASE_URL=mysql://evett:evett@db:3306/evett
+      - LOCALE=en
+      - SECRET=secret
+    volumes:
+      - ./public:/srv/evett/public:rw
+  db:
+    build:
+      context: ./docker/db
+      dockerfile: ./Dockerfile
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=evett
+      - MYSQL_DATABASE=evett
+      - MYSQL_PASSWORD=evett
+      - MYSQL_USER=evett
+    volumes:
+      - db-data:/var/lib/mysql:rw
+      # for sql dumps
+      - ./sql-dumps:/var/sql-dumps:rw
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: ./Dockerfile
+    expose:
+        - 80
+    volumes:
+      # Comment out the next line in production
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./public:/srv/evett/public:ro
+
+volumes:
+  app-web: {}
+  db-data: {}
