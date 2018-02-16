@@ -8,13 +8,11 @@ services:
     depends_on:
       - db
     environment:
-      # Change to prod in production
-      - SYMFONY_ENV=dev
-      - DATABASE_URL=mysql://evett:evett@db:3306/evett
+      - DATABASE_URL=mysql://symfony:symfony@db:3306/symfony
       - LOCALE=en
-      - SECRET=secret
+      - APP_ENV=dev
     volumes:
-      - .:/srv/evett:rw
+      - .:/srv/symfony:rw
   db:
     build:
       context: ./docker/db
@@ -22,10 +20,10 @@ services:
     expose:
       - 3306
     environment:
-      - MYSQL_ROOT_PASSWORD=evett
-      - MYSQL_DATABASE=evett
-      - MYSQL_PASSWORD=evett
-      - MYSQL_USER=evett
+      - MYSQL_ROOT_PASSWORD=symfony
+      - MYSQL_DATABASE=symfony
+      - MYSQL_PASSWORD=symfony
+      - MYSQL_USER=symfony
     volumes:
       - db-data:/var/lib/mysql:rw
       # for sql dumps
@@ -39,7 +37,7 @@ services:
     volumes:
       # Comment out the next line in production
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./public:/srv/evett/public:ro
+      - ./public:/srv/symfony/public:ro
 
 volumes:
   db-data: {}

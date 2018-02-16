@@ -40,7 +40,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer global require "hirak/prestissimo:^0.3" --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative \
 	&& composer clear-cache
 
-WORKDIR /srv/evett
+WORKDIR /srv/symfony
 
 COPY composer.json ./
 COPY composer.lock ./
