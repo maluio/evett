@@ -14,7 +14,7 @@ services:
       - LOCALE=en
       - SECRET=secret
     volumes:
-      - ./public:/srv/evett/public:rw
+      - .:/srv/evett:rw
   db:
     build:
       context: ./docker/db
@@ -42,5 +42,4 @@ services:
       - ./public:/srv/evett/public:ro
 
 volumes:
-  app-web: {}
   db-data: {}
