@@ -11,12 +11,12 @@ abstract class AbstractProvider
     /**
      * @var Sanitizer
      */
-    public $sanitizer;
+    protected $sanitizer;
 
     /**
      * @var Client
      */
-    public $httpClient;
+    protected $httpClient;
 
     /**
      * AbstractProvider constructor.

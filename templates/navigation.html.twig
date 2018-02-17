@@ -1,19 +1,29 @@
 <ul class="nav" style="position:fixed; top: 0; background-color: lightgray; width: 100%">
     <li class="nav-item">
-        <a class="nav-link active" href="{{ path('home', {
+        <a class="nav-link active" href="{{ path('home', app.request.query.all|merge({
             'year' : day|date("Y"),
             'month' : day|date("m"),
             'day' : day|date_modify("-1 day")|date("d")
-        }) }}"> <- </a>
+        })) }}"> <- </a>
     </li>
     <li class="nav-item">
         <a class="nav-link disabled" href="#">{{ day|date("D (d.m)") }}</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ path('home', {
+        <a class="nav-link" href="{{ path('home', app.request.query.all|merge({
             'year' : day|date("Y"),
             'month' : day|date("m"),
             'day' : day|date_modify("+1 day")|date("d")
-        }) }}"> -> </a>
+        })) }}"> -> </a>
     </li>
+
+    <li class="nav-item"><a class="nav-link" href="
+        {{ path('home', app.request.query.all|merge({'provider': null})) }}
+    ">all provider</a></li>
+
+    {% for prov in provider %}
+        <li class="nav-item"><a class="nav-link" href="
+            {{ path('home', app.request.query.all|merge({'provider': prov.getName})) }}
+        ">{{ prov.getName }}</a></li>
+    {% endfor %}
 </ul>

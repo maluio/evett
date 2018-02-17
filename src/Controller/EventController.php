@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Event;
 use App\Import\Importer;
+use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,10 +16,18 @@ class EventController extends Controller
     /**
      * @Route("/", name="home")
      */
-    public function index(Request $request, EventRepository $eventRepository, Importer $importer)
+    public function index(
+        Request $request,
+        EventRepository $eventRepository,
+        Importer $importer,
+        ProviderManager $providerManager
+    )
     {
         $day = $this->getDay($request);
-        $events = $eventRepository->getForDay($day);
+        $events = $eventRepository->getForDay(
+            $day,
+            $request->get('provider')
+        );
         $oneHourAgo = new \DateTime('now - 1hour');
 
         if(
@@ -33,7 +42,8 @@ class EventController extends Controller
         return $this->render('index.html.twig',
             [
                 'events' => $events,
-                'day' => $day
+                'day' => $day,
+                'provider' => $providerManager->getAll()
             ]);
     }
 
@@ -57,6 +67,11 @@ class EventController extends Controller
         $date = new \DateTime();
 
         if($request->getQueryString()){
+            if(
+                $request->get('year')
+                && $request->get('month')
+                && $request->get('day')
+            )
             $date->setDate(
                 $request->get('year'),
                 $request->get('month'),
