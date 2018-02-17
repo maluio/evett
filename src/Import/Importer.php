@@ -4,23 +4,12 @@
 namespace App\Import;
 
 
-use App\Provider\MeetupProvider;
-use App\Provider\OvsProvider;
+use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Importer
 {
-    /**
-     * @var MeetupProvider
-     */
-    private $meetupProvider;
-
-    /**
-     * @var OvsProvider
-     */
-    private $OvsProvider;
-
     /**
      * @var EventRepository
      */
@@ -32,29 +21,32 @@ class Importer
     private $entityManager;
 
     /**
+     * @var ProviderManager
+     */
+    private $providerManager;
+
+    /**
      * Importer constructor.
-     * @param MeetupProvider $meetupProvider
-     * @param OvsProvider $OvsProvider
      * @param EventRepository $eventRepository
      * @param EntityManagerInterface $entityManager
+     * @param ProviderManager $providers
      */
     public function __construct(
-        MeetupProvider $meetupProvider,
-        OvsProvider $OvsProvider,
         EventRepository $eventRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        ProviderManager $providers
     ) {
-        $this->meetupProvider = $meetupProvider;
-        $this->OvsProvider = $OvsProvider;
         $this->eventRepository = $eventRepository;
         $this->entityManager = $entityManager;
+        $this->providerManager = $providers;
     }
 
     public function import(\DateTime $day){
         $events = [];
 
-        $events = array_merge($this->OvsProvider->get($day), $events);
-        $events = array_merge($this->meetupProvider->get($day), $events);
+        foreach ($this->providerManager->getAll() as $provider){
+            $events = array_merge($provider->getEvents($day), $events);
+        }
 
         $updated = new \DateTime();
 

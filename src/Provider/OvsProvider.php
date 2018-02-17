@@ -3,25 +3,29 @@
 
 namespace App\Provider;
 
-
 use App\Entity\Event;
-use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
-class OvsProvider extends AbstractProvider
+class OvsProvider extends AbstractProvider implements ProviderInterface
 {
-    CONST api = 'http://paris.onvasortir.com/vue_sortie_day.php';
+    private CONST api = 'http://paris.onvasortir.com/vue_sortie_day.php';
+
+    private CONST name = 'OVS';
 
     private $events = [];
 
     private $day;
 
-    public function get($day)
+    public function getName(): string
+    {
+        return self::name;
+    }
+
+    public function getEvents(\DateTime $day): array
     {
         $this->day = $day;
 
-        $client = new Client();
-        $response = $client->request('GET', self::api, [
+        $response = $this->httpClient->request('GET', self::api, [
             'query' => [
                 'y' => $this->day->format('Y'),
                 'm' => $this->day->format('m'),
@@ -63,7 +67,7 @@ class OvsProvider extends AbstractProvider
             $title = $this->sanitizer->removeUndesiredCharacters($title->text());
             $event->setTitle($title);
             $event->setUrl($url);
-            $event->setProvider('OVS');
+            $event->setProvider($this->getName());
             $event->setStart($start);
             $this->events[] = $event;
         });

@@ -4,13 +4,14 @@
 namespace App\Provider;
 
 use App\Entity\Event;
-use GuzzleHttp\Client;
 use Symfony\Component\DomCrawler\Crawler;
 
-class MeetupProvider extends AbstractProvider
+class MeetupProvider extends AbstractProvider implements ProviderInterface
 {
 
-    CONST api = 'https://www.meetup.com/fr-FR/find/events/';
+    private CONST api = 'https://www.meetup.com/fr-FR/find/events/';
+
+    private CONST name = 'MEETUP';
 
     /**
      * @var array
@@ -22,16 +23,20 @@ class MeetupProvider extends AbstractProvider
      */
     private $day;
 
+    public function getName(): string
+    {
+        return self::name;
+    }
+
     /**
      * @param $day
      * @return array[Events]
      */
-    public function get($day)
+    public function getEvents(\DateTime $day) : array
     {
         $this->day = $day;
 
-        $client = new Client();
-        $response = $client->request('GET', self::api, [
+        $response = $this->httpClient->request('GET', self::api, [
             'query' => [
                 'allMeetups' => 'true',
                 'radius' => '26',
@@ -48,14 +53,12 @@ class MeetupProvider extends AbstractProvider
 
         $crawler = new Crawler();
         $crawler->addHtmlContent($html);
-        // $crawler = $crawler->filter('ul.searchResults');
         $year = $this->day->format('Y');
         $month = $this->day->format('n');
         $day = $this->day->format('j');
         $class = '.container-' . $year . '-' . $month . '-' . $day;
 
         $crawler = $crawler->filter('ul.searchResults ' . $class . ' li')->each(function (Crawler $el, $i) {
-            // dump($el->text());
             $time = $el->filter('.row-item a')->reduce(function ($el, $i) {
                 return $i == 0;
             });
@@ -94,7 +97,7 @@ class MeetupProvider extends AbstractProvider
             $event->setUrl($url);
             $event->setDescription($group);
             $event->setStart($start);
-            $event->setProvider('MEETUP');
+            $event->setProvider($this->getName());
             $this->events[] = $event;
         });
 
