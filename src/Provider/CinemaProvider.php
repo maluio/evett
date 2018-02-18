@@ -60,9 +60,8 @@ class CinemaProvider extends AbstractProvider implements ProviderInterface
                     $movieUrl = 'http://www.allocine.fr/film/fichefilm_gen_cfilm=' . $movieId . '.html?=date' . $formatedDay;
                     $start = $content[0]['showtimes'][0]['showStart'];
                     $title = $data['movies'][$movieId]['title'];
-                    $releaseDate = new \DateTime($data['movies'][$movieId]['releaseDate']['date']);
                     $event = new Event();
-                    $event->setTitle($title . ' (' . $releaseDate->format('Y') . ')');
+                    $event->setTitle($title . $this->getMovieInfo($movieUrl));
                     $event->setStart(new \DateTime($start));
                     $event->setProvider($this->getName());
                     $event->setUrl($movieUrl);
@@ -71,6 +70,23 @@ class CinemaProvider extends AbstractProvider implements ProviderInterface
                 }
             }
         });
+    }
+
+    protected function getMovieInfo($movieUrl): string {
+        $response = $this->httpClient->request('GET', $movieUrl);
+
+        $html = $response->getBody()->getContents();
+        $crawler = new Crawler();
+        $crawler->addHtmlContent($html);
+
+       $director =  $crawler->filter('span[itemprop="director"] span[itemprop="name"]')->each(function ($node){
+            return $node->text();
+        });
+
+       $director = isset($director[0]) ? $director[0] : 'unkown';
+
+        return ' [' . $director . ']' ;
+
     }
 
 }
