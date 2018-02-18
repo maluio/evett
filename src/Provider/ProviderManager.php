@@ -15,13 +15,16 @@ class ProviderManager
      * Importer constructor.
      * @param MeetupProvider $meetupProvider
      * @param OvsProvider $OvsProvider
+     * @param CinemaProvider $cinemaProvider
      */
     public function __construct(
         MeetupProvider $meetupProvider,
-        OvsProvider $OvsProvider
+        OvsProvider $OvsProvider,
+        CinemaProvider $cinemaProvider
     ) {
         $this->providers[] = $meetupProvider;
         $this->providers[] = $OvsProvider;
+        $this->providers[] = $cinemaProvider;
     }
     /**
      * @return array|ProviderInterface
