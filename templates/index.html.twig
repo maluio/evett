@@ -17,7 +17,7 @@
                     <td>{{ event.provider }}</td>
                     <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
                     <td>{{ event.description }}</td>
-                    <td>{{ event.updated|date("r") }}</td>
+                    <td>{{ event.updated|date("d.m G:i") }}</td>
                 </tr>
             {% endfor %}
             </tbody>

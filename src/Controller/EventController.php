@@ -79,15 +79,14 @@ class EventController extends Controller
 
         if($request->getQueryString()){
             if(
-                $request->get('year')
-                && $request->get('month')
-                && $request->get('day')
+                $request->get('date')
             )
-            $date->setDate(
+/*            $date->setDate(
                 $request->get('year'),
                 $request->get('month'),
                 $request->get('day')
-            );
+            );*/
+            $date = \DateTime::createFromFormat('Y-m-d', $request->get('date'));
         }
 
         return clone $date;

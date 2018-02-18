@@ -3,9 +3,7 @@
         <ul class="nav">
             <li class="nav-item">
                 <a class="nav-link active" href="{{ path('home', app.request.query.all|merge({
-                    'year' : day|date("Y"),
-                    'month' : day|date("m"),
-                    'day' : day|date_modify("-1 day")|date("d")
+                    'date' : day|date_modify("-1 day")|date("Y-m-d")
                 })) }}"> <- </a>
             </li>
             <li class="nav-item">
@@ -13,9 +11,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('home', app.request.query.all|merge({
-                    'year' : day|date("Y"),
-                    'month' : day|date("m"),
-                    'day' : day|date_modify("+1 day")|date("d")
+                    'date' : day|date_modify("+1 day")|date("Y-m-d")
                 })) }}"> -> </a>
             </li>
 
