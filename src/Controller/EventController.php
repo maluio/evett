@@ -28,15 +28,12 @@ class EventController extends Controller
             $day,
             $request->get('provider')
         );
-        $oneHourAgo = new \DateTime('now - 1hour');
 
-        if(
-            !count($events)
-            || $events[0]->getUpdated() < $oneHourAgo
-        )
+        if(!count($events))
         {
             $importer->import($day);
             $events = $eventRepository->getForDay($day);
+            $this->addFlash('notice','Events imported for ' . $day->format('D (d.m)'));
         }
 
         return $this->render('index.html.twig',
@@ -53,6 +50,20 @@ class EventController extends Controller
     public function hide(Event $event, Request $request){
         $event->setHidden(true);
         $this->getDoctrine()->getManager()->flush();
+
+        $referer = $request->headers->get('referer');
+
+        return $this->redirect($referer);
+    }
+
+    /**
+     * @Route("/import/", name="import")
+     */
+    public function import(Request $request, Importer $importer){
+        $day = $this->getDay($request);
+
+        $importer->import($day);
+        $this->addFlash('notice','Events imported for ' . $day->format('D (d.m)'));
 
         $referer = $request->headers->get('referer');
 

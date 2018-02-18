@@ -3,10 +3,14 @@
 {% block body %}
 
     {{ include('navigation.html.twig') }}
-    <div style="margin-top: 50px">
+    <div class="container">
         <table class="table">
+            <tbody>
+            <tr>
+                <td colspan="5"></td>
+                <td><a href="{{ path('import', app.request.query.all) }}">Import</a></td>
+            </tr>
             {% for event in events %}
-                <tbody>
                 <tr>
                     <td><a href="{{ path('hide', {'id':event.id}) }}">Hide</a> </td>
                     <td>{{ event.start|date("H:i") }}</td>
@@ -15,8 +19,8 @@
                     <td>{{ event.description }}</td>
                     <td>{{ event.updated|date("r") }}</td>
                 </tr>
-                </tbody>
             {% endfor %}
+            </tbody>
         </table>
     </div>
 {% endblock %}
