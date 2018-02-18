@@ -12,6 +12,8 @@ class ImportCommand extends Command
 {
     protected static $defaultName = 'evett:import';
 
+    private CONST numberOfDays = 14;
+
     /**
      * @var Importer
      */
@@ -38,7 +40,13 @@ class ImportCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->importer->import(new \DateTime());
+        $day = new \DateTime();
+
+        $this->importer->import($day);
+        for($i=0; $i< self::numberOfDays; $i++){
+            $day = $day->add(\DateInterval::createFromDateString('1 day'));
+            $this->importer->import($day);
+        }
 
         $io->success('Import complete');
     }
