@@ -1,0 +1,5 @@
+# ADD TO CRONTAB OF HOST SYSTEM!!!
+
+
+# import evett events every hour
+0 * * * * /bin/bash -c 'cd /var/www/evett && docker-compose exec app php bin/console evett:import' >/dev/null 2>&1
