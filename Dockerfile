@@ -1,5 +1,8 @@
 FROM php:7.1-fpm-alpine
 
+RUN apk update \
+    && apk add sqlite
+
 RUN apk add --no-cache --virtual .persistent-deps \
 		git \
 		icu-libs \
