@@ -1,0 +1,24 @@
+<nav class="navbar fixed-top navbar-light bg-light">
+    <div class="container">
+        <ul class="nav">
+            {%  if 'home' == app.request.get('_route') %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('starred_index') }}">Starred</a>
+                </li>
+                {{ include('navigation/dayoperations.html.twig') }}
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('home') }}">Home</a>
+                </li>
+            {% endif %}
+        </ul>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</nav>

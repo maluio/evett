@@ -1,0 +1,27 @@
+<table class="table table-sm">
+    <thead class="thead-light">
+    <tr>
+        <th colspan="6" style="text-align: center;">
+            {{ events|first.start|date("D (d.m)") }}
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for event in events %}
+        <tr {% if event.starred  and 'home' == app.request.get('_route')%} class="table-info" {% endif %}>
+            <td>
+                {% if event.starred %}
+                    <a href="{{ path('unstar', {'id':event.id}) }}">Unstar</a>
+                {% else %}
+                    <a href="{{ path('star', {'id':event.id}) }}">Star</a>
+                {% endif %}
+            </td>
+            <td>{{ event.start|date("H:i") }}</td>
+            <td>{{ event.provider }}</td>
+            <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
+            <td>{{ event.description }}</td>
+            <td>{{ event.updated|date("d.m G:i") }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

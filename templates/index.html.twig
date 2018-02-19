@@ -2,25 +2,14 @@
 
 {% block body %}
 
-    {{ include('navigation.html.twig') }}
+    {{ include('navigation/navigation.html.twig') }}
     <div class="container">
-        <table class="table">
-            <tbody>
-            <tr>
-                <td colspan="5"></td>
-                <td><a href="{{ path('import', app.request.query.all) }}">Import</a></td>
-            </tr>
-            {% for event in events %}
-                <tr>
-                    <td><a href="{{ path('hide', {'id':event.id}) }}">Hide</a> </td>
-                    <td>{{ event.start|date("H:i") }}</td>
-                    <td>{{ event.provider }}</td>
-                    <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
-                    <td>{{ event.description }}</td>
-                    <td>{{ event.updated|date("d.m G:i") }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+    {% if eventsByDay is defined %}
+        {% for events in eventsByDay %}
+            {%  include 'eventtable.html.twig' with {'events': events}  %}
+        {% endfor %}
+    {% else %}
+        {{ include('eventtable.html.twig') }}
+    {% endif %}
     </div>
 {% endblock %}

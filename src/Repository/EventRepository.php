@@ -50,4 +50,17 @@ class EventRepository extends ServiceEntityRepository
 
         return $qb;
     }
+
+    public function findUpcomingStarred(){
+        $now = new \DateTime();
+        $today = new \DateTime($now->format("Y-m-d")." 00:00:00");
+
+        $qb = $this->createQueryBuilder('e');
+        $qb->where('e.starred = true')
+            ->andWhere('e.start > :today')
+            ->setParameter('today', $today)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }
