@@ -7,6 +7,7 @@ namespace App\Import;
 use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class Importer
 {
@@ -25,6 +26,12 @@ class Importer
      */
     private $providerManager;
 
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     /**
      * Importer constructor.
      * @param EventRepository $eventRepository
@@ -34,18 +41,26 @@ class Importer
     public function __construct(
         EventRepository $eventRepository,
         EntityManagerInterface $entityManager,
-        ProviderManager $providers
+        ProviderManager $providers,
+        LoggerInterface $logger
     ) {
         $this->eventRepository = $eventRepository;
         $this->entityManager = $entityManager;
         $this->providerManager = $providers;
+        $this->logger = $logger;
     }
 
     public function import(\DateTime $day){
         $events = [];
 
         foreach ($this->providerManager->getAll() as $provider){
-            $events = array_merge($provider->getEvents($day), $events);
+            $this->logger->info('Import started for ' . $provider->getName());
+            try {
+                $events = array_merge($provider->getEvents($day), $events);
+            }
+            catch (\Exception $e) {
+                $this->logger->error('Error during event import: ' . $e->getMessage());
+            }
         }
 
         $updated = new \DateTime();
