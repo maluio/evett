@@ -3,8 +3,8 @@
 
 namespace App\Provider;
 
+use App\Util\HttpClient;
 use App\Util\Sanitizer;
-use GuzzleHttp\Client;
 
 abstract class AbstractProvider
 {
@@ -14,17 +14,18 @@ abstract class AbstractProvider
     protected $sanitizer;
 
     /**
-     * @var Client
+     * @var HttpClient
      */
     protected $httpClient;
 
     /**
      * AbstractProvider constructor.
      * @param Sanitizer $sanitizer
+     * @param HttpClient $httpClient
      */
-    public function __construct(Sanitizer $sanitizer)
+    public function __construct(Sanitizer $sanitizer, HttpClient $httpClient)
     {
         $this->sanitizer = $sanitizer;
-        $this->httpClient = new Client();
+        $this->httpClient = $httpClient;
     }
 }
