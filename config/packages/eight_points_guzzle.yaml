@@ -1,4 +1,9 @@
 eight_points_guzzle:
+
+    #turn on logging for dev/debugging.
+    #Beware: It creates huge files in var/cache/profiler because it dumps the whole response body
+    logging: false
+
     clients:
         my_client:
             # Write here the host where to do requests
