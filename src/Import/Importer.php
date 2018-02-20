@@ -8,6 +8,7 @@ use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class Importer
 {
@@ -26,11 +27,16 @@ class Importer
      */
     private $providerManager;
 
-
     /**
      * @var LoggerInterface
      */
     private $logger;
+
+
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
 
     /**
      * Importer constructor.
@@ -42,12 +48,14 @@ class Importer
         EventRepository $eventRepository,
         EntityManagerInterface $entityManager,
         ProviderManager $providers,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ValidatorInterface $validator
     ) {
         $this->eventRepository = $eventRepository;
         $this->entityManager = $entityManager;
         $this->providerManager = $providers;
         $this->logger = $logger;
+        $this->validator = $validator;
     }
 
     public function import(\DateTime $day){
@@ -59,7 +67,7 @@ class Importer
                 $events = array_merge($provider->getEvents($day), $events);
             }
             catch (\Exception $e) {
-                $this->logger->error('Error during event import: ' . $e->getMessage());
+                $this->logger->error('Error from provider during event import: ' . $e->getMessage());
             }
         }
 
@@ -70,9 +78,20 @@ class Importer
                $event = $existingEvent;
             }
             $event->setUpdated($updated);
-            $this->entityManager->persist($event) ;
+
+            $errors = $this->validator->validate($event);
+
+            if(count($errors) > 0){
+                $this->logger->error('Validation failed for: ' . $event->getUrl(), $errors);
+                break;
+            }
+
+            $this->entityManager->persist($event);
+
+            // flushing inside the for loop to prevent non-unique events
+            //@todo: if performance becomes an issue, this can be improved
+            $this->entityManager->flush();
         }
 
-        $this->entityManager->flush();
     }
 }

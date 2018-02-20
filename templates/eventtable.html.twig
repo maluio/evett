@@ -2,7 +2,9 @@
     <thead class="thead-light">
     <tr>
         <th colspan="6" style="text-align: center;">
-            {{ events|first.start|date("D (d.m)") }}
+            {% if events|first is not empty %}
+                {{ events|first.start|date("D (d.m)") }}
+            {% endif %}
         </th>
     </tr>
     </thead>
