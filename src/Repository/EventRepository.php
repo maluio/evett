@@ -17,7 +17,7 @@ class EventRepository extends ServiceEntityRepository
         return $existingRecords = $this->findOneBy(['url' => $url]);
     }
 
-    public function getForDay(\DateTime $day, string $provider=NULL)
+    public function findForDay(\DateTime $day, string $provider=NULL)
     {
         $qb = $this->getForDayQueryBuilder($day);
 

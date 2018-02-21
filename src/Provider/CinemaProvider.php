@@ -10,8 +10,15 @@ use Symfony\Component\DomCrawler\Crawler;
 class CinemaProvider extends AbstractProvider implements ProviderInterface
 {
 
+    /**
+     * @var string
+     */
     private CONST name = 'CINEMA';
 
+
+    /**
+     * @var Event[]
+     */
     protected $events = [];
 
     public function getName(): string
@@ -19,6 +26,11 @@ class CinemaProvider extends AbstractProvider implements ProviderInterface
         return self::name;
     }
 
+
+    /**
+     * @param \DateTime $day
+     * @return Event[]
+     */
     public function getEvents(\DateTime $day): array
     {
 
@@ -37,7 +49,7 @@ class CinemaProvider extends AbstractProvider implements ProviderInterface
         return $this->events;
     }
 
-    protected function getEventsForTheatre(\DateTime $day, $theatreUrl, $theatreName): void
+    protected function getEventsForTheatre(\DateTime $day, string $theatreUrl, string $theatreName): void
     {
         $response = $this->httpClient->request('GET', $theatreUrl);
 
@@ -72,7 +84,7 @@ class CinemaProvider extends AbstractProvider implements ProviderInterface
         });
     }
 
-    protected function getMovieInfo($movieUrl): string {
+    protected function getMovieInfo(string $movieUrl): string {
         $response = $this->httpClient->request('GET', $movieUrl);
 
         $html = $response->getBody()->getContents();

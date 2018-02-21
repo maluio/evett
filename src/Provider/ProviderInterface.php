@@ -15,7 +15,7 @@ interface ProviderInterface
 
     /**
      * @param \DateTime $day
-     * @return array|Event
+     * @return Event[]
      */
     public function getEvents(\DateTime $day): array;
 }
