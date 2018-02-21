@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
@@ -21,6 +22,7 @@ class Event
     /**
      * @ORM\Column(type="string")
      * @var string
+     * @Assert\NotBlank()
      */
     private $title;
 
@@ -33,24 +35,29 @@ class Event
     /**
      * @ORM\Column(type="datetime")
      * @var \DateTime
+     * @Assert\DateTime()
+     * @Assert\NotBlank()
      */
     private $start;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @var \DateTime
+     * @Assert\DateTime()
      */
     private $end;
 
     /**
      * @ORM\Column(type="string", unique=true)
      * @var string
+     * @Assert\NotBlank()
      */
     private $url;
 
     /**
      * @ORM\Column(type="string")
      * @var string
+     * @Assert\NotBlank()
      */
     private $provider;
 
@@ -58,17 +65,19 @@ class Event
      * @ORM\Column(type="boolean")
      * @var boolean
      */
-    private $starred;
+    private $starred = false;
 
     /**
      * @ORM\Column(type="boolean")
      * @var boolean
      */
-    private $hidden;
+    private $hidden = false;
 
     /**
      * @ORM\Column(type="datetime")
      * @var \DateTime
+     * @Assert\DateTime()
+     * @Assert\NotBlank()
      */
     private $updated;
 

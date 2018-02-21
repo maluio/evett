@@ -24,7 +24,7 @@ class EventController extends Controller
     )
     {
         $day = $this->getDay($request);
-        $events = $eventRepository->getForDay(
+        $events = $eventRepository->findForDay(
             $day,
             $request->get('provider')
         );
