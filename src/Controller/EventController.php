@@ -32,7 +32,7 @@ class EventController extends Controller
         if(!count($events))
         {
             $importer->import($day);
-            $events = $eventRepository->getForDay($day);
+            $events = $eventRepository->findForDay($day);
             $this->addFlash('notice','Events imported for ' . $day->format('D (d.m)'));
         }
 

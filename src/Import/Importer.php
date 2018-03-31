@@ -82,8 +82,9 @@ class Importer
             $errors = $this->validator->validate($event);
 
             if(count($errors) > 0){
-                $this->logger->error('Validation failed for: ' . $event->getUrl(), $errors);
-                break;
+                foreach ($errors as $error){
+                    $this->logger->error('Validation failed for: ' . $event->getUrl(),  [$error->__toString()]);
+                }
             }
 
             $this->entityManager->persist($event);
