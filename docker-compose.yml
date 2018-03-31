@@ -11,6 +11,8 @@ services:
       - APP_ENV=dev
     volumes:
       - .:/srv/symfony:rw
+    networks:
+      - back
 #  db:
 #    build:
 #      context: ./docker/db
@@ -32,6 +34,11 @@ services:
       dockerfile: ./Dockerfile
     expose:
         - 80
+    networks:
+      - reverse-proxy
+      - back
+    environment:
+      - VIRTUAL_HOST=evett-staging.*
     volumes:
       # Comment out the next line in production
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
@@ -39,3 +46,10 @@ services:
 
 #volumes:
 #  db-data: {}
+
+networks:
+  reverse-proxy:
+    external:
+      name: reverseproxy_default
+  back:
+    driver: bridge

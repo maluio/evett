@@ -1,6 +1,6 @@
-dev: down up composer logs
+dev: down up logs
 
-prod: down prod-up reverse-proxy-up permissions
+prod: down prod-up permissions
 
 prod-up:
 	docker-compose -f docker-compose.yml -f docker-compose-production.yml up -d --build
@@ -13,9 +13,9 @@ reverse-proxy-down:
 reverse-proxy-up:
 	cd ../reverse-proxy/ && docker-compose up -d && cd -
 
-up: docker-up reverse-proxy-up permissions
+up: docker-up permissions
 
-down: reverse-proxy-down docker-down
+down: docker-down
 
 docker-up:
 	docker-compose up -d

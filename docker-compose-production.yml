@@ -4,3 +4,6 @@ services:
   app:
     environment:
       - APP_ENV=prod
+  nginx:
+    environment:
+      - VIRTUAL_HOST=evett.*
