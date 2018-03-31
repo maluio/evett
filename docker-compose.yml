@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/srv/symfony:rw
     networks:
-      - back
+      - private
 #  db:
 #    build:
 #      context: ./docker/db
@@ -28,7 +28,7 @@ services:
 #      - db-data:/var/lib/mysql:rw
 #      # for sql dumps
 #      - ./sql-dumps:/var/sql-dumps:rw
-  nginx:
+  web:
     build:
       context: ./docker/nginx
       dockerfile: ./Dockerfile
@@ -36,7 +36,8 @@ services:
         - 80
     networks:
       - reverse-proxy
-      - back
+      - private
+      - shared
     environment:
       - VIRTUAL_HOST=evett-staging.*
     volumes:
@@ -51,5 +52,8 @@ networks:
   reverse-proxy:
     external:
       name: reverseproxy_default
-  back:
+  shared:
+    external:
+      name: shared
+  private:
     driver: bridge
