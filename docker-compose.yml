@@ -39,7 +39,9 @@ services:
       - private
       - shared
     environment:
-      - VIRTUAL_HOST=evett-staging.*
+      - VIRTUAL_HOST=evett-staging.${HOSTNAME}
+      - LETSENCRYPT_HOST=evett-staging.${HOSTNAME}
+      - LETSENCRYPT_EMAIL=${EMAIL}
     volumes:
       # Comment out the next line in production
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
