@@ -11,6 +11,9 @@
         ">{{ prov.getName }}</a></li>
     {% endfor %}
     <li class="nav-item"><a class="nav-link" href="
+        {{ path('home', app.request.query.all|merge({'hourOffset': '0'})) }}
+    ">All day</a></li>
+    <li class="nav-item"><a class="nav-link" href="
         {{ path('home', app.request.query.all|merge({'hourOffset': '17'})) }}
     ">17h</a></li>
     <li class="nav-item"><a class="nav-link" href="

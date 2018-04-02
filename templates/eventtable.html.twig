@@ -1,4 +1,19 @@
-<table class="table table-sm">
+<style type="text/css">
+
+   .events tr.starred a.star {
+       display: none;
+   }
+   .events tr.starred {
+       background-color: #bee5eb;
+   }
+
+   .events tr.unstarred a.unstar {
+       display: none;
+   }
+
+</style>
+
+<table class="table table-sm events">
     <thead class="thead-light">
     <tr>
         <th colspan="6" style="text-align: center;">
@@ -10,13 +25,11 @@
     </thead>
     <tbody>
     {% for event in events %}
-        <tr {% if event.starred  and 'home' == app.request.get('_route')%} class="table-info" {% endif %}>
-            <td>
-                {% if event.starred %}
-                    <a href="{{ path('unstar', {'id':event.id}) }}">Unstar</a>
-                {% else %}
-                    <a href="{{ path('star', {'id':event.id}) }}">Star</a>
-                {% endif %}
+        <tr {% if event.starred %} class="starred"
+            {% else %} class="unstarred"{% endif %}>
+            <td class="starable">
+                    <a class="unstar" href="{{ path('unstar', {'id':event.id}) }}">Unstar</a>
+                    <a class="star" href="{{ path('star', {'id':event.id}) }}">Star</a>
             </td>
             <td>{{ event.start|date("H:i") }}</td>
             <td>{{ event.provider }}</td>
@@ -27,3 +40,19 @@
     {% endfor %}
     </tbody>
 </table>
+
+<script type="text/javascript">
+    $( document ).ready(function() {
+        var $rows = $('table.events tr');
+        $rows.each(function (row) {
+            var $row =  $(this);
+            $row.find('td.starable a').on('click', function (e) {
+                e.preventDefault();
+                var url = $(e.target).attr("href");
+                $.get(url, function (data) {
+                    $row.toggleClass('starred unstarred');
+                });
+            })
+        })
+    });
+</script>

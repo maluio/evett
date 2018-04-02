@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Event;
 use App\Import\Importer;
 use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
@@ -58,43 +57,6 @@ class EventController extends Controller
         }
 
         return $this->render('index.html.twig', ['eventsByDay'=>$eventsByDay]);
-    }
-
-    /**
-     * @Route("/hide/{id}", name="hide")
-     */
-    public function hide(Event $event, Request $request){
-        $event->setHidden(true);
-        $this->getDoctrine()->getManager()->flush();
-
-        $referer = $request->headers->get('referer');
-
-        return $this->redirect($referer);
-    }
-
-
-    /**
-     * @Route("/star/{id}", name="star")
-     */
-    public function star(Event $event, Request $request){
-        $event->setStarred(true);
-        $this->getDoctrine()->getManager()->flush();
-
-        $referer = $request->headers->get('referer');
-
-        return $this->redirect($referer);
-    }
-
-    /**
-     * @Route("/unstar/{id}", name="unstar")
-     */
-    public function unstar(Event $event, Request $request){
-        $event->setStarred(false);
-        $this->getDoctrine()->getManager()->flush();
-
-        $referer = $request->headers->get('referer');
-
-        return $this->redirect($referer);
     }
 
     /**
