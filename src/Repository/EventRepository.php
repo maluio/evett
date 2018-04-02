@@ -17,9 +17,9 @@ class EventRepository extends ServiceEntityRepository
         return $existingRecords = $this->findOneBy(['url' => $url]);
     }
 
-    public function findForDay(\DateTime $day, string $provider=NULL)
+    public function findForDay(\DateTime $day, string $provider=null, $hourOffset=null)
     {
-        $qb = $this->getForDayQueryBuilder($day);
+        $qb = $this->getForDayQueryBuilder($day, $hourOffset);
 
         if($provider){
             $qb = $this->addQbForProvider($provider, $qb);
@@ -35,9 +35,12 @@ class EventRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    protected function getForDayQueryBuilder(\DateTime $day){
+    protected function getForDayQueryBuilder(\DateTime $day, $hourOffset=null){
         $from = new \DateTime($day->format("Y-m-d")." 00:00:00");
-        $to   = new \DateTime($day->format("Y-m-d")." 23:59:59");
+        if($hourOffset) {
+            $from->modify('+ '. (int) $hourOffset . ' hours');
+        }
+        $to = new \DateTime($day->format("Y-m-d")." 23:59:59");
 
         $qb = $this->createQueryBuilder("e");
         $qb
@@ -59,6 +62,7 @@ class EventRepository extends ServiceEntityRepository
         $qb->where('e.starred = true')
             ->andWhere('e.start > :today')
             ->setParameter('today', $today)
+            ->orderBy('e.start')
         ;
 
         return $qb->getQuery()->getResult();

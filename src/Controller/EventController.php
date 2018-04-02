@@ -26,7 +26,8 @@ class EventController extends Controller
         $day = $this->getDay($request);
         $events = $eventRepository->findForDay(
             $day,
-            $request->get('provider')
+            $request->get('provider'),
+            $request->get('hourOffset')
         );
 
         if(!count($events))

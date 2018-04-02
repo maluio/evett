@@ -1,5 +1,8 @@
 {% if provider is defined %}
     <li class="nav-item"><a class="nav-link" href="
+        {{ path('home', {'date' : app.request.get('date')}) }}
+    ">Remove all filter</a></li>
+    <li class="nav-item"><a class="nav-link" href="
         {{ path('home', app.request.query.all|merge({'provider': null})) }}
     ">all provider</a></li>
     {% for prov in provider %}
@@ -7,4 +10,10 @@
             {{ path('home', app.request.query.all|merge({'provider': prov.getName})) }}
         ">{{ prov.getName }}</a></li>
     {% endfor %}
+    <li class="nav-item"><a class="nav-link" href="
+        {{ path('home', app.request.query.all|merge({'hourOffset': '17'})) }}
+    ">17h</a></li>
+    <li class="nav-item"><a class="nav-link" href="
+        {{ path('home', app.request.query.all|merge({'hourOffset': '18'})) }}
+    ">18h</a></li>
 {% endif %}
