@@ -7,12 +7,6 @@ prod-up:
 	docker-compose exec app composer install --no-dev --optimize-autoloader
 	docker-compose exec app bin/console cache:clear
 
-reverse-proxy-down:
-	cd ../reverse-proxy/ && docker-compose down && cd -
-
-reverse-proxy-up:
-	cd ../reverse-proxy/ && docker-compose up -d && cd -
-
 up: docker-up permissions
 
 down: docker-down

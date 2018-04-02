@@ -17,22 +17,8 @@
         <a class="nav-link disabled" href="#">Today</a>
     </li>
 {% endif %}
-
 <li class="nav-item">
     <a class="nav-link" href="{{ path('home', app.request.query.all|merge({
         'date' : day|date_modify("+1 day")|date("Y-m-d")
     })) }}"> -> </a>
-</li>
-
-<li class="nav-item"><a class="nav-link" href="
-        {{ path('home', app.request.query.all|merge({'provider': null})) }}
-    ">all provider</a></li>
-
-{% for prov in provider %}
-    <li class="nav-item"><a class="nav-link" href="
-            {{ path('home', app.request.query.all|merge({'provider': prov.getName})) }}
-        ">{{ prov.getName }}</a></li>
-{% endfor %}
-
-<li class="nav-item"><a class="nav-link" href="{{ path('import', app.request.query.all) }}">Import</a>
 </li>

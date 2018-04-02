@@ -1,0 +1,10 @@
+{% if provider is defined %}
+    <li class="nav-item"><a class="nav-link" href="
+        {{ path('home', app.request.query.all|merge({'provider': null})) }}
+    ">all provider</a></li>
+    {% for prov in provider %}
+        <li class="nav-item"><a class="nav-link" href="
+            {{ path('home', app.request.query.all|merge({'provider': prov.getName})) }}
+        ">{{ prov.getName }}</a></li>
+    {% endfor %}
+{% endif %}

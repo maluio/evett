@@ -1,10 +1,15 @@
 <nav class="navbar fixed-top navbar-light bg-light">
     <div class="container">
         <ul class="nav">
-            {%  if 'home' == app.request.get('_route') %}
+            {% if 'home' == app.request.get('_route') %}
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#">{{ day|date("D (d.m)") }}</a>
+                </li>
                 <li class="nav-item"><a class="nav-link" href="{{ path('starred_index') }}">Starred</a>
                 </li>
                 {{ include('navigation/dayoperations.html.twig') }}
+                <li class="nav-item"><a class="nav-link" href="{{ path('import', app.request.query.all) }}">Import</a>
+                </li>
             {% else %}
                 <li class="nav-item"><a class="nav-link" href="{{ path('home') }}">Home</a>
                 </li>
@@ -20,5 +25,10 @@
                 </div>
             {% endfor %}
         {% endfor %}
+    </div>
+    <div class="container">
+        <ul class="nav">
+            {{ include('navigation/filter.html.twig')}}
+        </ul>
     </div>
 </nav>
