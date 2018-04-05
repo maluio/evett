@@ -2,9 +2,7 @@ version: '3'
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    image: malulu/php-7.1:latest
     env_file:
      - ${ENV_CONTAINER_PATH}/global.env
      #- ${ENV_CONTAINER_PATH}/evett.global.env
