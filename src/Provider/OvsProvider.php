@@ -10,16 +10,11 @@ class OvsProvider extends AbstractProvider implements ProviderInterface
 {
     private CONST api = 'http://paris.onvasortir.com/vue_sortie_day.php';
 
-    private CONST name = 'OVS';
+    protected CONST key = 'OVS';
 
     private $events = [];
 
     private $day;
-
-    public function getName(): string
-    {
-        return self::name;
-    }
 
     public function getEvents(\DateTime $day): array
     {
@@ -67,7 +62,7 @@ class OvsProvider extends AbstractProvider implements ProviderInterface
             $title = $this->sanitizer->removeUndesiredCharacters($title->text());
             $event->setTitle($title);
             $event->setUrl($url);
-            $event->setProvider($this->getName());
+            $event->setProvider($this->getKey());
             $event->setStart($start);
             $this->events[] = $event;
         });

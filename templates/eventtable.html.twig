@@ -32,7 +32,7 @@
                     <a class="star" href="{{ path('star', {'id':event.id}) }}">Star</a>
             </td>
             <td>{{ event.start|date("H:i") }}</td>
-            <td>{{ event.provider }}</td>
+            <td>{{ event.provider|trans }}</td>
             <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
             <td>{{ event.description }}</td>
             <td>{{ event.updated|date("d.m G:i") }}</td>

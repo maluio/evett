@@ -13,19 +13,12 @@ class CinemaProvider extends AbstractProvider implements ProviderInterface
     /**
      * @var string
      */
-    private CONST name = 'CINEMA';
-
+    protected CONST key = 'CINEMA';
 
     /**
      * @var Event[]
      */
     protected $events = [];
-
-    public function getName(): string
-    {
-        return self::name;
-    }
-
 
     /**
      * @param \DateTime $day
@@ -75,7 +68,7 @@ class CinemaProvider extends AbstractProvider implements ProviderInterface
                     $event = new Event();
                     $event->setTitle($title . $this->getMovieInfo($movieUrl));
                     $event->setStart(new \DateTime($start));
-                    $event->setProvider($this->getName());
+                    $event->setProvider($this->getKey());
                     $event->setUrl($movieUrl);
                     $event->setDescription($theatreName);
                     $this->events[] = $event;

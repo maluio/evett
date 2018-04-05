@@ -62,7 +62,7 @@ class Importer
         $events = [];
 
         foreach ($this->providerManager->getAll() as $provider){
-            $this->logger->info('Import started for ' . $provider->getName());
+            $this->logger->info('Import started for ' . $provider->getKey());
             try {
                 $events = array_merge($provider->getEvents($day), $events);
             }

@@ -28,4 +28,9 @@ abstract class AbstractProvider
         $this->sanitizer = $sanitizer;
         $this->httpClient = $httpClient;
     }
+
+    public function getKey(): string
+    {
+        return static::key;
+    }
 }

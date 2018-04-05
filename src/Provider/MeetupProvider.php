@@ -11,7 +11,7 @@ class MeetupProvider extends AbstractProvider implements ProviderInterface
 
     private CONST api = 'https://www.meetup.com/fr-FR/find/events/';
 
-    private CONST name = 'MEETUP';
+    protected CONST key = 'MEETUP';
 
     /**
      * @var array
@@ -22,11 +22,6 @@ class MeetupProvider extends AbstractProvider implements ProviderInterface
      * @var \DateTime
      */
     private $day;
-
-    public function getName(): string
-    {
-        return self::name;
-    }
 
     /**
      * @param $day
@@ -97,7 +92,7 @@ class MeetupProvider extends AbstractProvider implements ProviderInterface
             $event->setUrl($url);
             $event->setDescription($group);
             $event->setStart($start);
-            $event->setProvider($this->getName());
+            $event->setProvider($this->getKey());
             $this->events[] = $event;
         });
 

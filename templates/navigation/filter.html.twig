@@ -7,8 +7,8 @@
     ">all provider</a></li>
     {% for prov in provider %}
         <li class="nav-item"><a class="nav-link" href="
-            {{ path('home', app.request.query.all|merge({'provider': prov.getName})) }}
-        ">{{ prov.getName }}</a></li>
+            {{ path('home', app.request.query.all|merge({'provider': prov.getKey})) }}
+        ">{{ prov.getKey|trans }}</a></li>
     {% endfor %}
     <li class="nav-item"><a class="nav-link" href="
         {{ path('home', app.request.query.all|merge({'hourOffset': '0'})) }}

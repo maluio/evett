@@ -11,7 +11,7 @@ interface ProviderInterface
     /**
      * @return string
      */
-    public function getName(): string;
+    public function getKey(): string;
 
     /**
      * @param \DateTime $day
