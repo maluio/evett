@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+    env_file:
+     - ${ENV_CONTAINER_PATH}/global.env
+     #- ${ENV_CONTAINER_PATH}/evett.global.env
     environment:
       - DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db
       - LOCALE=en
