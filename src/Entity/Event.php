@@ -81,6 +81,13 @@ class Event
      */
     private $updated;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     * @Assert\DateTime()
+     */
+    private $lastViewed;
+
     public function __construct()
     {
         $this->setHidden(false);
@@ -237,5 +244,21 @@ class Event
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastViewed(): ?\DateTime
+    {
+        return $this->lastViewed;
+    }
+
+    /**
+     * @param \DateTime $lastViewed
+     */
+    public function setLastViewed(\DateTime $lastViewed): void
+    {
+        $this->lastViewed = $lastViewed;
     }
 }
