@@ -7,28 +7,13 @@ services:
      - ${ENV_CONTAINER_PATH}/global.env
      #- ${ENV_CONTAINER_PATH}/evett.global.env
     environment:
-      - DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db
+      - DATABASE_URL=mysql://root:${DB_PW}@servus_db_1:3306/evett
       - LOCALE=en
       - APP_ENV=dev
     volumes:
       - .:/srv/symfony:rw
     networks:
       - private
-#  db:
-#    build:
-#      context: ./docker/db
-#      dockerfile: ./Dockerfile
-#    expose:
-#      - 3306
-#    environment:
-#      - MYSQL_ROOT_PASSWORD=symfony
-#      - MYSQL_DATABASE=symfony
-#      - MYSQL_PASSWORD=symfony
-#      - MYSQL_USER=symfony
-#    volumes:
-#      - db-data:/var/lib/mysql:rw
-#      # for sql dumps
-#      - ./sql-dumps:/var/sql-dumps:rw
   web:
     build:
       context: ./docker/nginx
@@ -44,12 +29,8 @@ services:
       - LETSENCRYPT_HOST=evett-staging.${HOSTNAME}
       - LETSENCRYPT_EMAIL=${EMAIL_ADMIN}
     volumes:
-      # Comment out the next line in production
       - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./public:/srv/symfony/public:ro
-
-#volumes:
-#  db-data: {}
 
 networks:
   reverse-proxy:
