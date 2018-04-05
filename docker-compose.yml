@@ -14,6 +14,7 @@ services:
       - .:/srv/symfony:rw
     networks:
       - private
+      - shared
   web:
     build:
       context: ./docker/nginx
