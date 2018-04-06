@@ -31,7 +31,7 @@
                     <a class="unstar" href="{{ path('unstar', {'id':event.id}) }}">Unstar</a>
                     <a class="star" href="{{ path('star', {'id':event.id}) }}">Star</a>
             </td>
-            <td>{% if not event.lastViewed  %}<strong>NEW</strong>{% endif %}</td>
+            <td>{% if not event.isViewed %}<strong>NEW</strong>{% endif %}</td>
             <td>{{ event.start|date("H:i") }}</td>
             <td>{{ event.provider|trans }}</td>
             <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>

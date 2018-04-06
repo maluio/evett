@@ -29,6 +29,6 @@ services:
     App\Util\HttpClient:
         arguments: ['@eight_points_guzzle.client.my_client']
 
-    App\EventListener\EventLastViewedUpdater:
+    App\EventListener\EventIsViewedUpdater:
             tags:
                 - { name: doctrine.event_listener, event: postLoad }

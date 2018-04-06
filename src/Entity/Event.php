@@ -82,11 +82,10 @@ class Event
     private $updated;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     * @Assert\DateTime()
+     * @var bool
+     * @ORM\Column(type="boolean")
      */
-    private $lastViewed;
+    private $isViewed = false;
 
     public function __construct()
     {
@@ -247,18 +246,18 @@ class Event
     }
 
     /**
-     * @return \DateTime
+     * @return bool
      */
-    public function getLastViewed(): ?\DateTime
+    public function isViewed(): bool
     {
-        return $this->lastViewed;
+        return $this->isViewed;
     }
 
     /**
-     * @param \DateTime $lastViewed
+     * @param bool $isViewed
      */
-    public function setLastViewed(\DateTime $lastViewed): void
+    public function setIsViewed(bool $isViewed): void
     {
-        $this->lastViewed = $lastViewed;
+        $this->isViewed = $isViewed;
     }
 }

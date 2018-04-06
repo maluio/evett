@@ -7,7 +7,7 @@ namespace App\EventListener;
 use App\Entity\Event;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
-class EventLastViewedUpdater
+class EventIsViewedUpdater
 {
     public function postLoad(LifecycleEventArgs $args){
 
@@ -17,9 +17,13 @@ class EventLastViewedUpdater
             return;
         }
 
+        if($entity->isViewed()){
+            return;
+        }
+
         $entityManager = $args->getEntityManager();
 
-        $entity->setLastViewed(new \DateTime());
+        $entity->setIsViewed(true);
 
         $entityManager->persist($entity);
 
