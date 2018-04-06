@@ -95,6 +95,9 @@
     "monolog/monolog": {
         "version": "1.23.0"
     },
+    "nesbot/carbon": {
+        "version": "1.25.0"
+    },
     "ocramius/proxy-manager": {
         "version": "2.1.1"
     },

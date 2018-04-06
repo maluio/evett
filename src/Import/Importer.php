@@ -6,9 +6,11 @@ namespace App\Import;
 
 use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use GuzzleHttp\Client;
 
 class Importer
 {
@@ -93,7 +95,9 @@ class Importer
             //@todo: if performance becomes an issue, this can be improved
             $this->entityManager->flush();
         }
-
-
+        $day = Carbon::instance($day);
+        $message = count($events) . ' imported for ' . $day->toDateString();
+        $client = new  Client();
+        $client->request('POST', getenv('WEBHOOK_SEND_MESSAGE'), ['json' => ['text' => $message]]);
     }
 }

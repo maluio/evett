@@ -5,7 +5,7 @@ services:
     image: malulu/php-7.1:latest
     env_file:
      - ${ENV_CONTAINER_PATH}/global.env
-     #- ${ENV_CONTAINER_PATH}/evett.global.env
+     - ${ENV_CONTAINER_PATH}/evett.global.env
     environment:
       - DATABASE_URL=mysql://root:${DB_PW}@servus_db_1:3306/evett
       - LOCALE=en
