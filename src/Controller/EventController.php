@@ -58,7 +58,7 @@ class EventController extends Controller
     public function import(Request $request, Importer $importer){
         $day = $this->getDay($request);
 
-        $message = $importer->import($day);
+        $message = $importer->import($day)->getMessage();
         $this->addFlash('notice', $message);
 
         $referer = $request->headers->get('referer');
@@ -81,5 +81,20 @@ class EventController extends Controller
         }
 
         return clone $date;
+    }
+
+    /**
+     * @Route("/new-events/", name="new_events")
+     */
+    public function newEvents(EventRepository $eventRepository){
+        $newEvents = $eventRepository->findNew();
+
+        $eventsByDay = [];
+
+        foreach ($newEvents as $event){
+            $eventsByDay[$event->getStart()->format('Y-m-d')][] = $event;
+        }
+
+        return $this->render('index.html.twig', ['eventsByDay'=>$eventsByDay]);
     }
 }

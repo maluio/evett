@@ -47,6 +47,8 @@ class WebHookController extends Controller
             return('No events imported');
         }
 
+        $message[] = $this->generateUrl('new_events');
+
         $message = implode(PHP_EOL, $message);
 
         $client->request('POST', getenv('WEBHOOK_SEND_MESSAGE'), ['json' => ['text' => $message]]);

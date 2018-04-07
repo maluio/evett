@@ -7,6 +7,8 @@
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{{ path('starred_index') }}">Starred</a>
                 </li>
+                <li class="nav-item"><a class="nav-link" href="{{ path('new_events') }}">New</a>
+                </li>
                 {{ include('navigation/dayoperations.html.twig') }}
                 <li class="nav-item"><a class="nav-link" href="{{ path('import', app.request.query.all) }}">Import</a>
                 </li>

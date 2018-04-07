@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use Carbon\Carbon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -54,14 +55,26 @@ class EventRepository extends ServiceEntityRepository
     }
 
     public function findUpcomingStarred(){
-        $now = new \DateTime();
-        $today = new \DateTime($now->format("Y-m-d")." 00:00:00");
 
         $qb = $this->createQueryBuilder('e');
         $qb->where('e.starred = true')
             ->andWhere('e.start > :today')
-            ->setParameter('today', $today)
+            ->setParameter('today', Carbon::today())
             ->orderBy('e.start')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findNew(): array {
+
+        $qb = $this->createQueryBuilder('e');
+        $qb->where('e.starred = false')
+            ->andWhere('e.hidden = false')
+            ->andWhere('e.start > :today')
+            ->setParameter('today', Carbon::today())
+            ->orderBy('e.start')
+            ->setMaxResults(100)
         ;
 
         return $qb->getQuery()->getResult();
