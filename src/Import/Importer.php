@@ -4,6 +4,7 @@
 namespace App\Import;
 
 
+use App\Entity\Event;
 use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
 use Carbon\Carbon;
@@ -48,12 +49,6 @@ class Importer
      */
     private $validator;
 
-    /**
-     * Importer constructor.
-     * @param EventRepository $eventRepository
-     * @param EntityManagerInterface $entityManager
-     * @param ProviderManager $providers
-     */
     public function __construct(
         EventRepository $eventRepository,
         EntityManagerInterface $entityManager,
@@ -68,7 +63,7 @@ class Importer
         $this->validator = $validator;
     }
 
-    public function import(Carbon $day){
+    public function import(Carbon $day): string {
         $events = [];
 
         foreach ($this->providerManager->getAll() as $provider){
@@ -83,38 +78,41 @@ class Importer
         $this->numberOfFoundEvents = count($events);
         $this->numberOfImportedEvents = 0;
         foreach ($events as $event){
-            $uniqueIdentifier = md5($event->getUrl() . $day->toDateString());
-
-            if(!$this->eventRepository->isEventNew($uniqueIdentifier)){
-               break;
-            }
-
-            $event->setUniqueIdentifier($uniqueIdentifier);
-
-            $errors = $this->validator->validate($event);
-            if(count($errors) > 0){
-                foreach ($errors as $error){
-                    $this->logger->error('Import validation failed for: ' . $event->getUrl(),  [$error->__toString()]);
-                }
-            }
-
-            $this->numberOfImportedEvents++;
-            $this->entityManager->persist($event);
-            $this->entityManager->flush();
+            $this->persistEvent($event);
         }
+
+        $message = $this->getNumberOfFoundEvents() . ' events found, ' . $this->getNumberOfImportedEvents(). ' imported';
+        $message .= ' for ' . $day->toDateString();
+
+        return $message;
     }
 
-    /**
-     * @return int
-     */
+    private function persistEvent(Event $event): void {
+        $uniqueIdentifier = md5($event->getUrl() . $event->getStart()->toDateString());
+
+        if(!$this->eventRepository->isEventNew($uniqueIdentifier)){
+            return;
+        }
+
+        $event->setUniqueIdentifier($uniqueIdentifier);
+
+        $errors = $this->validator->validate($event);
+        if(count($errors) > 0){
+            foreach ($errors as $error){
+                $this->logger->error('Import validation failed for: ' . $event->getUrl(),  [$error->__toString()]);
+            }
+        }
+
+        $this->numberOfImportedEvents++;
+        $this->entityManager->persist($event);
+        $this->entityManager->flush();
+    }
+
     public function getNumberOfImportedEvents(): int
     {
         return $this->numberOfImportedEvents;
     }
 
-    /**
-     * @return int
-     */
     public function getNumberOfFoundEvents(): int
     {
         return $this->numberOfFoundEvents;

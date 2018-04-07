@@ -19,7 +19,6 @@ class EventController extends Controller
     public function index(
         Request $request,
         EventRepository $eventRepository,
-        Importer $importer,
         ProviderManager $providerManager
     )
     {
@@ -29,13 +28,6 @@ class EventController extends Controller
             $request->get('provider'),
             $request->get('hourOffset')
         );
-
-        if(!count($events))
-        {
-            $importer->import($day);
-            $events = $eventRepository->findForDay($day);
-            $this->addFlash('notice','Events imported for ' . $day->format('D (d.m)'));
-        }
 
         return $this->render('index.html.twig',
             [
@@ -66,8 +58,8 @@ class EventController extends Controller
     public function import(Request $request, Importer $importer){
         $day = $this->getDay($request);
 
-        $importer->import($day);
-        $this->addFlash('notice','Events imported for ' . $day->format('D (d.m)'));
+        $message = $importer->import($day);
+        $this->addFlash('notice', $message);
 
         $referer = $request->headers->get('referer');
 
@@ -85,12 +77,7 @@ class EventController extends Controller
             if(
                 $request->get('date')
             )
-/*            $date->setDate(
-                $request->get('year'),
-                $request->get('month'),
-                $request->get('day')
-            );*/
-            $date = \DateTime::createFromFormat('Y-m-d', $request->get('date'));
+            $date = Carbon::createFromFormat('Y-m-d', $request->get('date'));
         }
 
         return clone $date;

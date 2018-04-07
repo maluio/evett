@@ -7,7 +7,7 @@ namespace App\Provider;
 class ProviderManager
 {
     /**
-     * @var array|ProviderInterface
+     * @var ProviderInterface[]
      */
     private $providers = [];
 
@@ -27,7 +27,7 @@ class ProviderManager
         $this->providers[] = $cinemaProvider;
     }
     /**
-     * @return array|ProviderInterface
+     * @return ProviderInterface[]
      */
     public function getAll(): array {
         return $this->providers;

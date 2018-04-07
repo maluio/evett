@@ -2,13 +2,12 @@
 
 namespace App\Entity;
 
+use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
- * @UniqueEntity("uniqueIdentifier")
  */
 class Event
 {
@@ -135,11 +134,11 @@ class Event
     }
 
     /**
-     * @return \DateTime
+     * @return Carbon
      */
     public function getStart()
     {
-        return $this->start;
+        return Carbon::instance($this->start);
     }
 
     /**
@@ -151,11 +150,11 @@ class Event
     }
 
     /**
-     * @return \DateTime
+     * @return Carbon
      */
     public function getEnd()
     {
-        return $this->end;
+        return Carbon::instance($this->end);
     }
 
     /**
@@ -231,11 +230,11 @@ class Event
     }
 
     /**
-     * @return \DateTime
+     * @return Carbon
      */
     public function getUpdated()
     {
-        return $this->updated;
+        return Carbon::instance($this->updated);
     }
 
     /**
