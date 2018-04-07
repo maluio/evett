@@ -67,14 +67,14 @@
             var $row =  $(this);
             $row.find('td.starable a').on('click', function (e) {
                 e.preventDefault();
-                var url = $(e.target).attr("href");
+                var url = $(e.currentTarget).attr("href");
                 $.get(url, function (data) {
                     $row.toggleClass('starred');
                 });
             });
             $row.find('td.hidable a').on('click', function (e) {
                 e.preventDefault();
-                var url = $(e.target).attr("href");
+                var url = $(e.currentTarget).attr("href");
                 $.get(url, function (data) {
                     $row.toggleClass('hidden');
                 });
