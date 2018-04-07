@@ -6,6 +6,7 @@ namespace App\Import;
 
 use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
+use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -38,6 +39,11 @@ class Importer
     private $numberOfImportedEvents=0;
 
     /**
+     * @var int
+     */
+    private $numberOfFoundEvents=0;
+
+    /**
      * @var ValidatorInterface
      */
     private $validator;
@@ -62,7 +68,7 @@ class Importer
         $this->validator = $validator;
     }
 
-    public function import(\DateTime $day){
+    public function import(Carbon $day){
         $events = [];
 
         foreach ($this->providerManager->getAll() as $provider){
@@ -74,22 +80,24 @@ class Importer
                 $this->logger->error('Error from provider during event import: ' . $e->getMessage());
             }
         }
-
-        $updated = new \DateTime();
+        $this->numberOfFoundEvents = count($events);
         $this->numberOfImportedEvents = 0;
         foreach ($events as $event){
-            if($existingEvent = $this->eventRepository->findOneByUrl($event->getUrl())){
-               $event = $existingEvent;
+            $uniqueIdentifier = md5($event->getUrl() . $day->toDateString());
+
+            if(!$this->eventRepository->isEventNew($uniqueIdentifier)){
+               break;
             }
-            $event->setUpdated($updated);
+
+            $event->setUniqueIdentifier($uniqueIdentifier);
 
             $errors = $this->validator->validate($event);
-
             if(count($errors) > 0){
                 foreach ($errors as $error){
-                    $this->logger->error('Validation failed for: ' . $event->getUrl(),  [$error->__toString()]);
+                    $this->logger->error('Import validation failed for: ' . $event->getUrl(),  [$error->__toString()]);
                 }
             }
+
             $this->numberOfImportedEvents++;
             $this->entityManager->persist($event);
             $this->entityManager->flush();
@@ -102,5 +110,13 @@ class Importer
     public function getNumberOfImportedEvents(): int
     {
         return $this->numberOfImportedEvents;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfFoundEvents(): int
+    {
+        return $this->numberOfFoundEvents;
     }
 }

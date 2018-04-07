@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\EventRepository")
- * @UniqueEntity("url")
+ * @UniqueEntity("uniqueIdentifier")
  */
 class Event
 {
@@ -62,6 +62,12 @@ class Event
     private $provider;
 
     /**
+     * @var string
+     * @ORM\Column(type="string")
+     */
+    private $uniqueIdentifier;
+
+    /**
      * @ORM\Column(type="boolean")
      * @var boolean
      */
@@ -85,6 +91,7 @@ class Event
     {
         $this->setHidden(false);
         $this->setStarred(false);
+        $this->setUpdated(new \DateTime());
     }
 
     /**
@@ -237,5 +244,21 @@ class Event
     public function setUpdated($updated)
     {
         $this->updated = $updated;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUniqueIdentifier(): string
+    {
+        return $this->uniqueIdentifier;
+    }
+
+    /**
+     * @param string $uniqueIdentifier
+     */
+    public function setUniqueIdentifier(string $uniqueIdentifier): void
+    {
+        $this->uniqueIdentifier = $uniqueIdentifier;
     }
 }

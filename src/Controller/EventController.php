@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Import\Importer;
 use App\Provider\ProviderManager;
 use App\Repository\EventRepository;
+use Carbon\Carbon;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,10 +76,10 @@ class EventController extends Controller
 
     /**
      * @param Request $request
-     * @return \DateTime
+     * @return Carbon
      */
     private function getDay(Request $request){
-        $date = new \DateTime();
+        $date = Carbon::today();
 
         if($request->getQueryString()){
             if(

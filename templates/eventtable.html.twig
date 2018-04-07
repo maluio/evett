@@ -31,7 +31,7 @@
 <table class="table table-sm events">
     <thead class="thead-light">
     <tr>
-        <th colspan="6" style="text-align: center;">
+        <th colspan="7" style="text-align: center;">
             {% if events|first is not empty %}
                 {{ events|first.start|date("D (d.m)") }}
             {% endif %}
@@ -42,13 +42,13 @@
     {% for event in events %}
         <tr {% if event.starred %} class="starred"
             {% elseif event.hidden %} class="hidden"{% endif %}>
-            <td class="starable">
-                    <a class="unstar" href="{{ path('unstar', {'id':event.id}) }}">Unstar</a>
-                    <a class="star" href="{{ path('star', {'id':event.id}) }}">Star</a>
-            </td>
             <td class="hidable">
                 <a class="hide" href="{{ path('hide', {'id':event.id}) }}">Hide</a>
                 <a class="unhide" href="{{ path('unhide', {'id':event.id}) }}">Unhide</a>
+            </td>
+            <td class="starable">
+                    <a class="unstar" href="{{ path('unstar', {'id':event.id}) }}">Unstar</a>
+                    <a class="star" href="{{ path('star', {'id':event.id}) }}">Star</a>
             </td>
             <td>{{ event.start|date("H:i") }}</td>
             <td>{{ event.provider|trans }}</td>

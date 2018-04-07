@@ -33,3 +33,6 @@ db:
 shell:
 	docker-compose exec app sh
 
+schema:
+	docker-compose exec -T app php bin/console doctrine:schema:update --force
+

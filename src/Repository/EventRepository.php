@@ -13,8 +13,8 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-    public function findOneByUrl($url){
-        return $existingRecords = $this->findOneBy(['url' => $url]);
+    public function isEventNew(string $uniqueIdentifier): bool {
+        return $this->findOneBy(['uniqueIdentifier' => $uniqueIdentifier]) ? false : true;
     }
 
     public function findForDay(\DateTime $day, string $provider=null, $hourOffset=null)
