@@ -25,6 +25,16 @@ class ApiController extends Controller
     }
 
     /**
+     * @Route("/unhide/{id}", name="unhide")
+     */
+    public function unhide(Event $event){
+        $event->setHidden(false);
+        $this->getDoctrine()->getManager()->flush();
+
+        return new JsonResponse('ok');
+    }
+
+    /**
      * @Route("/star/{id}", name="star")
      */
     public function star(Event $event){

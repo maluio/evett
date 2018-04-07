@@ -44,7 +44,6 @@ class EventRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder("e");
         $qb
-            ->andWhere('e.hidden = 0')
             ->andWhere('e.start BETWEEN :from AND :to')
             ->setParameter('from', $from )
             ->setParameter('to', $to)
