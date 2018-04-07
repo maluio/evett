@@ -47,7 +47,7 @@ class Event
     private $end;
 
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string")
      * @var string
      * @Assert\NotBlank()
      */
