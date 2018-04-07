@@ -81,12 +81,6 @@ class Event
      */
     private $updated;
 
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    private $isViewed = false;
-
     public function __construct()
     {
         $this->setHidden(false);
@@ -243,21 +237,5 @@ class Event
     public function setUpdated($updated)
     {
         $this->updated = $updated;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isViewed(): bool
-    {
-        return $this->isViewed;
-    }
-
-    /**
-     * @param bool $isViewed
-     */
-    public function setIsViewed(bool $isViewed): void
-    {
-        $this->isViewed = $isViewed;
     }
 }

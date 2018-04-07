@@ -28,7 +28,3 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Util\HttpClient:
         arguments: ['@eight_points_guzzle.client.my_client']
-
-    App\EventListener\EventIsViewedUpdater:
-            tags:
-                - { name: doctrine.event_listener, event: postLoad }
