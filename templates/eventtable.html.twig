@@ -43,12 +43,12 @@
         <tr {% if event.starred %} class="starred"
             {% elseif event.hidden %} class="hidden"{% endif %}>
             <td class="hidable">
-                <a class="hide" href="{{ path('hide', {'id':event.id}) }}">Hide</a>
-                <a class="unhide" href="{{ path('unhide', {'id':event.id}) }}">Unhide</a>
+                <a class="hide" href="{{ path('hide', {'id':event.id}) }}"><span class="oi oi-eye"></span></a>
+                <a class="unhide" href="{{ path('unhide', {'id':event.id}) }}"><span class="oi oi-eye"></span></a>
             </td>
             <td class="starable">
-                    <a class="unstar" href="{{ path('unstar', {'id':event.id}) }}">Unstar</a>
-                    <a class="star" href="{{ path('star', {'id':event.id}) }}">Star</a>
+                    <a class="unstar" href="{{ path('unstar', {'id':event.id}) }}"><span class="oi oi-star"></span></a>
+                    <a class="star" href="{{ path('star', {'id':event.id}) }}"><span class="oi oi-star"></span></a>
             </td>
             <td>{{ event.start|date("H:i") }}</td>
             <td>{{ event.provider|trans }}</td>
