@@ -27,20 +27,20 @@ class WebHookController extends Controller
         $message = [];
 
         for($i=0; $i < self::NUMBER_OF_DAYS_IN_ADVANCE; $i++){
-             $day->addDay();
 
             if($i < 15){
-                // make sure we get a fresh instance of non-shared service
-                $message[] = $importer->import($day->copy())->getMessage();
+                if($message = $importer->import($day->copy())->getMessage()){
+                    $message[] = $message;
+                };
                 continue;
             }
 
             if(6 === $day->dayOfWeek || 7 === $day->dayOfWeek){
-                // make sure we get a fresh instance of non-shared service
                 if($message = $importer->import($day->copy())->getMessage()) {
                     $message[] = $message;
                 }
             }
+            $day->addDay();
         }
 
         if(0 === count($message)) {
