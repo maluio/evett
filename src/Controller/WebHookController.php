@@ -37,10 +37,18 @@ class WebHookController extends Controller
 
             if(6 === $day->dayOfWeek || 7 === $day->dayOfWeek){
                 // make sure we get a fresh instance of non-shared service
-                $message[] = $importer->import($day->copy())->getMessage();
+                if($message = $importer->import($day->copy())->getMessage()) {
+                    $message[] = $message;
+                }
             }
         }
+
+        if(0 === count($message)) {
+            return('No events imported');
+        }
+
         $message = implode(PHP_EOL, $message);
+
         $client->request('POST', getenv('WEBHOOK_SEND_MESSAGE'), ['json' => ['text' => $message]]);
         return new JsonResponse('Imported for the next ' . self::NUMBER_OF_DAYS_IN_ADVANCE . ' days');
     }
