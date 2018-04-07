@@ -35,63 +35,62 @@ class Importer
     private $logger;
 
     /**
-     * @var int
-     */
-    private $numberOfImportedEvents=0;
-
-    /**
-     * @var int
-     */
-    private $numberOfFoundEvents=0;
-
-    /**
      * @var ValidatorInterface
      */
     private $validator;
+
+    /**
+     * @var Report
+     */
+    private $report;
 
     public function __construct(
         EventRepository $eventRepository,
         EntityManagerInterface $entityManager,
         ProviderManager $providers,
         LoggerInterface $logger,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        Report $report
     ) {
         $this->eventRepository = $eventRepository;
         $this->entityManager = $entityManager;
         $this->providerManager = $providers;
         $this->logger = $logger;
         $this->validator = $validator;
+        $this->report = $report;
     }
 
-    public function import(Carbon $day): string {
-        $events = [];
+    public function import(Carbon $day): Importer {
 
         foreach ($this->providerManager->getAll() as $provider){
+            $providerReport = new ProviderReport($provider->getKey());
+            $this->report->day = $day->copy();
             $this->logger->info('Import started for ' . $provider->getKey());
+
             try {
-                $events = array_merge($provider->getEvents($day), $events);
+                $events = $provider->getEvents($day->copy());
+                $providerReport->numberOfFoundEvents = count($events);
             }
             catch (\Exception $e) {
                 $this->logger->error('Error from provider during event import: ' . $e->getMessage());
             }
-        }
-        $this->numberOfFoundEvents = count($events);
-        $this->numberOfImportedEvents = 0;
-        foreach ($events as $event){
-            $this->persistEvent($event);
+
+            foreach ($events as $event){
+                if($this->persistEvent($event)){
+                    $providerReport->numberOfImportedEvents++;
+                }
+            }
+            $this->report->addProviderReport($providerReport);
         }
 
-        $message = $this->getNumberOfFoundEvents() . ' events found, ' . $this->getNumberOfImportedEvents(). ' imported';
-        $message .= ' for ' . $day->toDateString();
-
-        return $message;
+        return $this;
     }
 
-    private function persistEvent(Event $event): void {
+    private function persistEvent(Event $event): bool {
         $uniqueIdentifier = md5($event->getUrl() . $event->getStart()->toDateString());
 
         if(!$this->eventRepository->isEventNew($uniqueIdentifier)){
-            return;
+            return false;
         }
 
         $event->setUniqueIdentifier($uniqueIdentifier);
@@ -103,18 +102,17 @@ class Importer
             }
         }
 
-        $this->numberOfImportedEvents++;
         $this->entityManager->persist($event);
         $this->entityManager->flush();
+
+        return true;
     }
 
-    public function getNumberOfImportedEvents(): int
-    {
-        return $this->numberOfImportedEvents;
+    public function getReport(): Report{
+        return $this->report;
     }
 
-    public function getNumberOfFoundEvents(): int
-    {
-        return $this->numberOfFoundEvents;
+    public function getMessage(): string {
+        return $this->report->getMessage();
     }
 }

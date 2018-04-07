@@ -12,6 +12,8 @@ class ParisApiProvider
     CONST api = 'https://api.paris.fr/api/data/2.2/QueFaire/get_events/';
 
     public function get(){
+        $this->events = [];
+
         $client = new Client();
         $res = $client->request('GET', self::api, [
             'query' => [

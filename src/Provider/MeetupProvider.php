@@ -29,6 +29,8 @@ class MeetupProvider extends AbstractProvider implements ProviderInterface
      */
     public function getEvents(\DateTime $day) : array
     {
+        $this->events = [];
+
         $this->day = $day;
 
         $response = $this->httpClient->request('GET', self::api, [

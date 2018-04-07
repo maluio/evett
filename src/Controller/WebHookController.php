@@ -17,16 +17,31 @@ use Symfony\Component\Routing\Annotation\Route;
 class WebHookController extends Controller
 {
 
+    const NUMBER_OF_DAYS_IN_ADVANCE = 30;
     /**
      * @Route("/import-events", name="import_events")
      */
     public function importEvents(Importer $importer){
         $day = Carbon::today();
-        $message = $importer->import($day);
-
         $client = new  Client();
-        $client->request('POST', getenv('WEBHOOK_SEND_MESSAGE'), ['json' => ['text' => $message]]);
+        $message = [];
 
-        return new JsonResponse($message);
+        for($i=0; $i < self::NUMBER_OF_DAYS_IN_ADVANCE; $i++){
+             $day->addDay();
+
+            if($i < 15){
+                // make sure we get a fresh instance of non-shared service
+                $message[] = $importer->import($day->copy())->getMessage();
+                continue;
+            }
+
+            if(6 === $day->dayOfWeek || 7 === $day->dayOfWeek){
+                // make sure we get a fresh instance of non-shared service
+                $message[] = $importer->import($day->copy())->getMessage();
+            }
+        }
+        $message = implode(PHP_EOL, $message);
+        $client->request('POST', getenv('WEBHOOK_SEND_MESSAGE'), ['json' => ['text' => $message]]);
+        return new JsonResponse('Imported for the next ' . self::NUMBER_OF_DAYS_IN_ADVANCE . ' days');
     }
 }

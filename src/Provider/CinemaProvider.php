@@ -26,7 +26,7 @@ class CinemaProvider extends AbstractProvider implements ProviderInterface
      */
     public function getEvents(\DateTime $day): array
     {
-
+        $this->events = [];
         // Forum des Images
         $fdi = 'http://www.allocine.fr/seance/salle_gen_csalle=C0119.html';
         $this->getEventsForTheatre($day, $fdi, 'Forum des images');
