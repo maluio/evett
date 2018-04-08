@@ -29,15 +29,15 @@ class WebHookController extends Controller
         for($i=0; $i < self::NUMBER_OF_DAYS_IN_ADVANCE; $i++){
 
             if($i < 15){
-                if($message = $importer->import($day->copy())->getMessage()){
-                    $message[] = $message;
+                if($importMessage = $importer->import($day->copy())->getMessage()){
+                    $message[] = $importMessage;
                 };
                 continue;
             }
 
             if(6 === $day->dayOfWeek || 7 === $day->dayOfWeek){
-                if($message = $importer->import($day->copy())->getMessage()) {
-                    $message[] = $message;
+                if($importMessage = $importer->import($day->copy())->getMessage()) {
+                    $message[] = $importMessage;
                 }
             }
             $day->addDay();
