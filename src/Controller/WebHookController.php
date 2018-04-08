@@ -44,7 +44,7 @@ class WebHookController extends Controller
         }
 
         if(0 === count($message)) {
-            return('No events imported');
+            return new JsonResponse('No events imported');
         }
 
         $message[] = $this->generateUrl('new_events');
