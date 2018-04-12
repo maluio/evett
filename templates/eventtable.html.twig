@@ -39,9 +39,10 @@
     </tr>
     </thead>
     <tbody>
-    {% for event in events %}
+    {% for event in events  %}
         <tr {% if event.starred %} class="starred"
-            {% elseif event.hidden %} class="hidden"{% endif %}>
+            {% elseif event.hidden %} class="hidden"
+            {% else %} tabindex="{{ loop.index }}" {% endif %}>
             <td class="hidable">
                 <a class="hide" href="{{ path('hide', {'id':event.id}) }}"><span class="oi oi-eye"></span></a>
                 <a class="unhide" href="{{ path('unhide', {'id':event.id}) }}"><span class="oi oi-eye"></span></a>
@@ -78,6 +79,20 @@
                 $.get(url, function (data) {
                     $row.toggleClass('hidden');
                 });
+            });
+
+            $row.focusout(function (e) {
+                if( ! $row.hasClass('starred') && ! $row.hasClass('hidden')){
+                    $row.find('td.hidable a.hide').click();
+                }
+            });
+
+            $row.focusin(function (e) {
+                var center = $(window).height()/2;
+                var top = $row.offset().top ;
+                if (top > center){
+                    $(window).scrollTop(top-center);
+                }
             })
         })
     });
