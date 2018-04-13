@@ -6,6 +6,9 @@
    .events tr.starred {
        background-color: #bee5eb;
    }
+   .events tr.active {
+       background-color: lightgreen;
+   }
 
    .events tr:not(.starred) a.unstar {
        display: none;
@@ -41,8 +44,7 @@
     <tbody>
     {% for event in events  %}
         <tr {% if event.starred %} class="starred"
-            {% elseif event.hidden %} class="hidden"
-            {% else %} tabindex="{{ loop.index }}" {% endif %}>
+            {% elseif event.hidden %} class="hidden" {% endif %}>
             <td class="hidable">
                 <a class="hide" href="{{ path('hide', {'id':event.id}) }}"><span class="oi oi-eye"></span></a>
                 <a class="unhide" href="{{ path('unhide', {'id':event.id}) }}"><span class="oi oi-eye"></span></a>
@@ -53,7 +55,7 @@
             </td>
             <td>{{ event.start|date("H:i") }}</td>
             <td>{{ event.provider|trans }}</td>
-            <td><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
+            <td class="external"><b><a href="{{ event.url }}" target="_blank">{{ event.title }}</a></b></td>
             <td>{{ event.description }}</td>
             <td>{{ event.updated|date("d.m G:i") }}</td>
         </tr>
@@ -63,7 +65,7 @@
 
 <script type="text/javascript">
     $( document ).ready(function() {
-        var $rows = $('table.events tr');
+        var $rows = $('table.events tbody tr');
         $rows.each(function (row) {
             var $row =  $(this);
             $row.find('td.starable a').on('click', function (e) {
@@ -78,6 +80,7 @@
                 var url = $(e.currentTarget).attr("href");
                 $.get(url, function (data) {
                     $row.toggleClass('hidden');
+                    findActiveRow();
                 });
             });
 
@@ -94,6 +97,43 @@
                     $(window).scrollTop(top-center);
                 }
             })
-        })
+        });
+
+        var $activeRow = null;
+
+        $( window ).keyup(function( event ) {
+            console.log(event.which);
+            // 74 -> j
+            if (event.which === 74) {
+                event.preventDefault();
+                findActiveRow();
+            }
+            // 85 -> u
+            if (event.which === 85) {
+                if($activeRow){
+                    var url = $activeRow.find('td.external a').attr('href');
+                    window.open(url, '_blank');
+                    //$activeRow.find('td.external a').click();
+                }
+            }
+        });
+
+        function findActiveRow() {
+            if($activeRow){
+                $activeRow.removeClass('active');
+                $activeRow.find('td.hidable a.hide').click();
+                $activeRow = null;
+                return;
+            }
+
+            $activeRow = $('table.events tbody tr').not('.hidden').not('.starred').first();
+            $activeRow.addClass('active');
+
+            var center = $(window).height()/2;
+            var top = $activeRow.offset().top ;
+            if (top > center){
+                $(window).scrollTop(top-center);
+            }
+        }
     });
 </script>
