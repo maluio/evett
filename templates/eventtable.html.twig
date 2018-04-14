@@ -73,6 +73,7 @@
                 var url = $(e.currentTarget).attr("href");
                 $.get(url, function (data) {
                     $row.toggleClass('starred');
+                    findActiveRow();
                 });
             });
             $row.find('td.hidable a').on('click', function (e) {
@@ -83,13 +84,6 @@
                     findActiveRow();
                 });
             });
-
-            $row.focusout(function (e) {
-                if( ! $row.hasClass('starred') && ! $row.hasClass('hidden')){
-                    $row.find('td.hidable a.hide').click();
-                }
-            });
-
             $row.focusin(function (e) {
                 var center = $(window).height()/2;
                 var top = $row.offset().top ;
@@ -116,12 +110,20 @@
                     //$activeRow.find('td.external a').click();
                 }
             }
+            // 78 -> n
+            if (event.which === 78) {
+                if($activeRow){
+                    $activeRow.find('td.starable a.star').click();
+                }
+            }
         });
 
         function findActiveRow() {
             if($activeRow){
                 $activeRow.removeClass('active');
-                $activeRow.find('td.hidable a.hide').click();
+                if(!$activeRow.hasClass('starred')){
+                    $activeRow.find('td.hidable a.hide').click();
+                }
                 $activeRow = null;
                 return;
             }
